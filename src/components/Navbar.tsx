@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Link } from "react-router-dom"; // for internal navigation
+import { Menu, X } from "lucide-react"; // icons for mobile toggle
+import navLinks from "../utils/navLinks";
 
 export default function Navbar() {
+  // State to toggle the mobile menu
   const [isOpen, setIsOpen] = useState(false);
-  const HOME = "Home";
-  const PRODUCTS = "Products";
-  const CARTS = "Cart";
-  const LOGIN = "Login";
 
   return (
-    <nav className="bg-background text-primary w-full px-6 py-4 fixed top-0 z-50 shadow-md">
+    // Main nav container
+    // `sticky` keeps it on top while scrolling
+    // `top-0` sticks it to the top
+    // `z-50` ensures it's above other content
+    // `shadow-md` adds a subtle drop shadow
+    <nav className="bg-background text-primary w-full px-6 py-4 sticky top-0 z-50 shadow-md">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <h1 className="font-heading font-bold text-2xl">
           <Link to="/">Malric Pharma</Link>
@@ -18,32 +21,16 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <ul className="hidden md:flex gap-8 font-heading list-none">
-          <li>
-            <Link to="/" className="hover:text-secondary transition-colors">
-              {HOME}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/projects"
-              className="hover:text-secondary transition-colors"
-            >
-              {PRODUCTS}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/contact"
-              className="hover:text-secondary transition-colors"
-            >
-              {CARTS}
-            </Link>
-          </li>
-          <li>
-            <Link to="/blog" className="hover:text-secondary transition-colors">
-              {LOGIN}
-            </Link>
-          </li>
+          {navLinks.map((link) => (
+            <li key={link.path}>
+              <Link
+                to={link.path}
+                className="hover:text-secondary transition-colors"
+              >
+                {link.name}
+              </Link>
+            </li>
+          ))}
         </ul>
 
         {/* Hamburger */}
@@ -64,42 +51,17 @@ export default function Navbar() {
             : "max-h-0 opacity-0 -translate-y-2"
         } mt-4 space-y-4 font-heading list-none text-center`}
       >
-        <li>
-          <Link
-            to="/"
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="hover:text-secondary transition-colors block"
-          >
-            {HOME}
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/projects"
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="hover:text-secondary transition-colors block"
-          >
-            {PRODUCTS}
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/contact"
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="hover:text-secondary transition-colors block"
-          >
-            {CARTS}
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/blog"
-            onClick={() => setIsOpen((prev) => !prev)}
-            className="hover:text-secondary transition-colors"
-          >
-            {LOGIN}
-          </Link>
-        </li>
+        {navLinks.map((link) => (
+          <li key={link.path}>
+            <Link
+              to={link.path}
+              onClick={() => setIsOpen((prev) => !prev)}
+              className="hover:text-secondary transition-colors block"
+            >
+              {link.name}
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );
