@@ -29,7 +29,7 @@ function Testimonials() {
               key={index}
               className="bg-background p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow"
             >
-              <p className="text-lg italic mb-4">“{t.quote}”</p>
+              <p className="text-lg italic text-secondary mb-4">“{t.quote}”</p>
               <p className="font-semibold text-grayText">— {t.name}</p>
             </div>
           ))}

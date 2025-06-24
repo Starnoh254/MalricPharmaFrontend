@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom"; // for internal navigation
 import { Menu, X } from "lucide-react"; // icons for mobile toggle
 import navLinks from "../utils/navLinks";
+import logo from "../assets/malric.png";
 
 export default function Navbar() {
   // State to toggle the mobile menu
@@ -13,11 +14,11 @@ export default function Navbar() {
     // `top-0` sticks it to the top
     // `z-50` ensures it's above other content
     // `shadow-md` adds a subtle drop shadow
-    <nav className="bg-background text-primary w-full px-6 py-4 sticky top-0 z-50 shadow-md">
+    <nav className="bg-background text-secondary w-full px-6 py-4 sticky top-0 z-50 shadow-md">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
-        <h1 className="font-heading font-bold text-2xl">
-          <Link to="/">Malric Pharma</Link>
-        </h1>
+        <Link to="/">
+          <img src={logo} alt="" className="w-32 " />
+        </Link>
 
         {/* Desktop nav */}
         <ul className="hidden md:flex gap-8 font-heading list-none">
@@ -25,7 +26,7 @@ export default function Navbar() {
             <li key={link.path}>
               <Link
                 to={link.path}
-                className="hover:text-secondary transition-colors"
+                className="hover:text-primary transition-colors"
               >
                 {link.name}
               </Link>

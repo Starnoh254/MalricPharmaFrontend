@@ -11,8 +11,8 @@ export default {
         body: ['Inter', 'sans-serif'],
       },
       colors: {
-        primary: '#3B82F6',
-        secondary: '#16A34A',
+        primary: '#229e48',
+        secondary: '#0f2f48',
         accent: '#FACC15',
         background: '	#FFFFFF',
         grayText: '#6B7280',
