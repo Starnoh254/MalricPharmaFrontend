@@ -1,10 +1,66 @@
 import MainLayout from "../components/MainLayout";
+import SearchBar from "../components/SearchBar";
+import ProductList from "../components/ProductList";
+import CategoryFilter from "../components/CategoryFilter";
+import Pagination from "../components/Pagination";
+import { useEffect, useState } from 'react';
+import { api } from "../utils/axios";
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl?: string;
+  category: string;
+}
 
 function Products() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 10;
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const queryParams = new URLSearchParams();
+        queryParams.append('page', currentPage.toString());
+        queryParams.append('limit', limit.toString());
+        if (category !== 'All') {
+          queryParams.append('category', category);
+        }
+
+        const res = await api.get(`/api/products?${queryParams.toString()}`);
+        setProducts(res.data.products);
+        setTotalPages(Math.ceil(res.data.total / limit));
+      } catch (err) {
+        console.error('Failed to fetch products', err);
+      }
+    };
+
+    fetchProducts();
+  }, [currentPage, category]);
+
+  const filteredProducts = products.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <MainLayout>
-      <h1 className="text-3xl font-bold">Welcome to Our Pharmacy</h1>
-      <p className="mt-2">Browse and order your meds online.</p>
+      <div className="p-4">
+        <h2 className="text-2xl font-semibold mb-4">Available Drugs</h2>
+        <SearchBar onSearch={setSearch} />
+        <CategoryFilter categories={['Antibiotics', 'Painkillers']} selectedCategory={category} onCategoryChange={setCategory} />
+        <ProductList products={filteredProducts} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
     </MainLayout>
   );
 }
