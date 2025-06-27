@@ -8,6 +8,7 @@ type User = {
   id: number;
   name: string;
   email: string;
+  is_admin: boolean;
 };
 
 type AuthContextType = {
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const savedToken = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
 
-    if (savedToken && savedUser) {
+    if (savedToken && savedUser && savedUser !== "undefined") {
       setToken(savedToken);
       setUser(JSON.parse(savedUser));
     }

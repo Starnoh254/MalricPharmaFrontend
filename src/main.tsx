@@ -4,6 +4,8 @@ import "./index.css";
 import App from "./App.tsx";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import { CartProvider } from "./context/CartContext.tsx";
+// Import environment validation
+import "./config/env";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

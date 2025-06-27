@@ -1,20 +1,17 @@
 import { api } from "../../utils/axios";
+import type {
+  LoginPayload,
+  AuthResponse,
+  ServerResponse,
+} from "../../types/api";
+import { handleServerResponse } from "../../types/api";
 
-type LoginPayload = {
-  email: string;
-  password: string;
-};
-
-type LoginResponse = {
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
-  token: string;
-};
-
-export const loginUser = async (payload: LoginPayload): Promise<LoginResponse> => {
-  const response = await api.post<LoginResponse>("/api/auth/login", payload);
-  return response.data;
+export const loginUser = async (
+  payload: LoginPayload
+): Promise<AuthResponse> => {
+  const response = await api.post<ServerResponse<AuthResponse>>(
+    "/auth/login",
+    payload
+  );
+  return handleServerResponse(response.data);
 };

@@ -15,7 +15,11 @@ export default function Footer() {
         <div className="flex gap-6">
           {navLinks.map((navLink) => {
             return (
-              <Link to={navLink.path} className="hover:text-white">
+              <Link
+                key={navLink.path}
+                to={navLink.path}
+                className="hover:text-white"
+              >
                 {navLink.name}
               </Link>
             );

@@ -1,9 +1,12 @@
 // pages/CartPage.tsx
-import MainLayout from '../components/MainLayout';
-import { useCart } from '../context/CartContext';
-import CartItem from '../components/CartItem';
+import { useNavigate } from "react-router-dom";
+import MainLayout from "../components/MainLayout";
+import { useCart } from "../context/CartContext";
+import CartItem from "../components/CartItem";
+import { formatCurrency } from "../utils/currency";
 
 export default function CartPage() {
+  const navigate = useNavigate();
   const { cartItems, total, clearCart } = useCart();
 
   return (
@@ -19,10 +22,23 @@ export default function CartPage() {
               <CartItem key={item.id} {...item} />
             ))}
             <div className="mt-6 text-right">
-              <h3 className="text-xl font-bold">Total: Ksh {total}</h3>
-              <button onClick={clearCart} className="mt-2 px-4 py-2 bg-red-500 text-white rounded">
-                Clear Cart
-              </button>
+              <h3 className="text-xl font-bold">
+                Total: {formatCurrency(total)}
+              </h3>
+              <div className="mt-4 space-x-3">
+                <button
+                  onClick={clearCart}
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+                >
+                  Clear Cart
+                </button>
+                <button
+                  onClick={() => navigate("/checkout")}
+                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-colors"
+                >
+                  Proceed to Checkout
+                </button>
+              </div>
             </div>
           </>
         )}

@@ -1,9 +1,7 @@
-// Array of navigation links
+// Array of navigation links (public links that show for all users)
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "Products", path: "/products" },
-  { name: "Cart", path: "/cart" },
-  { name: "Login", path: "/login" },
 ];
 
 export default navLinks;

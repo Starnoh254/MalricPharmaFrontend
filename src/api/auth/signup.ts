@@ -1,23 +1,25 @@
 // src/api/auth/signup.ts
 
 import { api } from "../../utils/axios";
+import type { SignupPayload, ServerResponse } from "../../types/api";
+import { handleServerResponse } from "../../types/api";
 
-type SignupPayload = {
-  name: string;
-  email: string;
-  password: string;
-};
-
+// Signup only returns user info (no token typically)
 type SignupResponse = {
   user: {
     id: number;
     name: string;
     email: string;
+    is_admin: boolean;
   };
-  token: string;
 };
 
-export const signupUser = async (payload: SignupPayload): Promise<SignupResponse> => {
-  const response = await api.post("/api/auth/signup", payload);
-  return response.data;
+export const signupUser = async (
+  payload: SignupPayload
+): Promise<SignupResponse> => {
+  const response = await api.post<ServerResponse<SignupResponse>>(
+    "/auth/register",
+    payload
+  );
+  return handleServerResponse(response.data);
 };

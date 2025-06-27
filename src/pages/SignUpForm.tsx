@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { signupUser } from "../api/auth/signup";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 export default function SignUpForm() {
@@ -11,7 +10,6 @@ export default function SignUpForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -19,8 +17,7 @@ export default function SignUpForm() {
     setError("");
 
     try {
-      const { user, token } = await signupUser({ name, email, password });
-      login(user, token); // Store in context + localStorage
+      await signupUser({ name, email, password });
       navigate("/"); // Go to homepage
     } catch (err) {
       setError("Failed to sign up. Try again.");
