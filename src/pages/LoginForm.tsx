@@ -16,8 +16,11 @@ export default function LoginForm() {
     setError("");
 
     try {
-      const { user, token } = await loginUser({ email, password });
-      login(user, token); // Save to context
+      const { user, accessToken, refreshToken } = await loginUser({
+        email,
+        password,
+      });
+      login(user, accessToken, refreshToken); // Save to context
       navigate("/"); // Redirect to home or dashboard
     } catch (err) {
       setError("Invalid email or password");
@@ -26,7 +29,10 @@ export default function LoginForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded">
+    <form
+      onSubmit={handleSubmit}
+      className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded"
+    >
       <h2 className="text-2xl font-bold mb-4">Login</h2>
 
       {error && <p className="text-red-500 mb-2">{error}</p>}
@@ -53,7 +59,10 @@ export default function LoginForm() {
         />
       </div>
 
-      <button type="submit" className="w-full bg-primary text-white py-2 rounded hover:bg-secondary transition">
+      <button
+        type="submit"
+        className="w-full bg-primary text-white py-2 rounded hover:bg-secondary transition"
+      >
         Login
       </button>
     </form>

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
-import  Logout  from "../api/auth/logout";
+import Logout from "../api/auth/logout";
 
 type User = {
   id: number;
@@ -13,8 +13,9 @@ type User = {
 
 type AuthContextType = {
   user: User | null;
-  token: string | null;
-  login: (user: User, token: string) => void;
+  accessToken: string | null;
+  refreshToken: string | null;
+  login: (user: User, accessToken: string, refreshToken: string) => void;
   logout: () => void;
   isAuthenticated: boolean;
 };
@@ -23,38 +24,59 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // Optional: Load token/user from localStorage on page refresh
-    const savedToken = localStorage.getItem("token");
+    // Optional: Load tokens/user from localStorage on page refresh
+    const savedAccessToken = localStorage.getItem("accessToken");
+    const savedRefreshToken = localStorage.getItem("refreshToken");
     const savedUser = localStorage.getItem("user");
 
-    if (savedToken && savedUser && savedUser !== "undefined") {
-      setToken(savedToken);
+    if (
+      savedAccessToken &&
+      savedRefreshToken &&
+      savedUser &&
+      savedUser !== "undefined"
+    ) {
+      setAccessToken(savedAccessToken);
+      setRefreshToken(savedRefreshToken);
       setUser(JSON.parse(savedUser));
     }
   }, []);
 
-  const login = (user: User, token: string) => {
+  const login = (user: User, accessToken: string, refreshToken: string) => {
     setUser(user);
-    setToken(token);
-    localStorage.setItem("token", token);
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("user", JSON.stringify(user));
   };
 
   const logout = async () => {
     Logout();
     setUser(null);
-    setToken(null);
-    localStorage.removeItem("token");
+    setAccessToken(null);
+    setRefreshToken(null);
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
   };
 
-  const isAuthenticated = !!token;
+  const isAuthenticated = !!accessToken;
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        accessToken,
+        refreshToken,
+        login,
+        logout,
+        isAuthenticated,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

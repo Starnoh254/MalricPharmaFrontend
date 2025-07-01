@@ -1,33 +1,16 @@
-// src/pages/CheckoutPage.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { orderService } from "../api/orders";
+import type { ShippingInfo, PaymentInfo } from "../api/orders";
+import { calculateOrderTotal, getDeliveryFee } from "../utils/pricing";
 import OrderSummary from "../components/checkout/OrderSummary";
 import ShippingForm from "../components/checkout/ShippingForm";
 import PaymentForm from "../components/checkout/PaymentForm";
 import OrderConfirmation from "../components/checkout/OrderConfirmation";
 import CheckoutSteps from "../components/checkout/CheckoutSteps";
-
-export type ShippingInfo = {
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  postalCode: string;
-  deliveryNotes?: string;
-};
-
-export type PaymentInfo = {
-  method: "mpesa" | "card" | "cash_on_delivery";
-  mpesaPhone?: string;
-  cardNumber?: string;
-  expiryDate?: string;
-  cvv?: string;
-};
 
 type CheckoutStep = "shipping" | "payment" | "confirmation";
 
@@ -36,21 +19,26 @@ export default function CheckoutPage() {
   const { cartItems, total, clearCart } = useCart();
   const { user, isAuthenticated } = useAuth();
 
+  // Delivery fee calculation (frontend only - not sent to backend)
+  const deliveryFee = getDeliveryFee(total);
+  const grandTotal = calculateOrderTotal(total); // For display purposes only
+
   const [currentStep, setCurrentStep] = useState<CheckoutStep>("shipping");
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
     fullName: user?.name || "",
-    email: user?.email || "",
-    phone: "",
     address: "",
     city: "",
     postalCode: "",
-    deliveryNotes: "",
+    phone: "",
+    email: user?.email || "",
+    notes: "",
   });
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
     method: "mpesa",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [orderItems, setOrderItems] = useState<typeof cartItems>([]);
 
   // Redirect if cart is empty
   if (cartItems.length === 0 && !orderNumber) {
@@ -77,50 +65,68 @@ export default function CheckoutPage() {
   const handleOrderConfirm = async () => {
     setIsLoading(true);
     try {
-      if (!user?.id) {
-        throw new Error("User not authenticated");
-      }
-
+      // Create order data according to API documentation
       const orderData = {
         items: cartItems.map((item) => ({
-          id: item.id,
-          name: item.name,
-          price: item.price,
+          productId: parseInt(item.id), // Convert string ID to number
           quantity: item.quantity,
-          imageUrl: item.imageUrl,
+          price: item.price,
         })),
         shipping: shippingInfo,
         payment: paymentInfo,
-        total,
-        userId: user.id,
+        total: total, // ✅ Products total only (no delivery fee) - as per backend API spec
       };
 
       console.log("Creating order with data:", orderData);
+      console.log(
+        `Products total: ${total}, Delivery fee: ${deliveryFee}, Grand total: ${grandTotal}`
+      );
+      console.log(
+        "ℹ️  Note: Backend only validates products total. Delivery fee handled on frontend."
+      );
 
       // Call the order API service
       const order = await orderService.createOrder(orderData);
 
-      console.log("Order created successfully:", order);
+      console.log("Order created successfully: ", order);
       setOrderNumber(order.orderNumber);
 
-      // Clear cart after successful order
-      clearCart();
+      // Save order items for confirmation display
+      setOrderItems([...cartItems]);
+
+      // Don't clear cart immediately - wait for user to navigate away
+      // Cart will be cleared when user goes to order history or home
 
       // Show success toast
-      // Note: Toast implementation should be available in context
       console.log("Order placed successfully!");
     } catch (error) {
-      console.error("Order failed:", error);
+      console.error("Order failed - Full error object:", error);
+      console.error(
+        "Error message:",
+        error instanceof Error ? error.message : "Unknown error"
+      );
+      console.error(
+        "Error stack:",
+        error instanceof Error ? error.stack : "No stack trace"
+      );
 
-      // Handle different types of errors
+      // Handle different types of errors based on API documentation
       if (error instanceof Error) {
-        if (error.message.includes("inventory")) {
+        if (error.message.includes("PRICE_MISMATCH")) {
+          alert(
+            "Product prices have changed. Please review your cart and try again."
+          );
+        } else if (error.message.includes("PRODUCT_NOT_FOUND")) {
           alert(
             "Some items in your cart are no longer available. Please review your cart and try again."
           );
-        } else if (error.message.includes("payment")) {
+        } else if (error.message.includes("INVALID_PAYMENT")) {
           alert(
-            "Payment processing failed. Please check your payment details and try again."
+            "Payment information is invalid. Please check your payment details and try again."
+          );
+        } else if (error.message.includes("INVALID_SHIPPING")) {
+          alert(
+            "Shipping information is incomplete. Please check your shipping details."
           );
         } else {
           alert("Order failed. Please try again.");
@@ -139,6 +145,17 @@ export default function CheckoutPage() {
     } else if (currentStep === "confirmation") {
       setCurrentStep("payment");
     }
+  };
+
+  // Navigation handlers that clear cart after successful order
+  const handleGoToOrders = () => {
+    clearCart(); // Clear cart when navigating to order history
+    navigate("/orders");
+  };
+
+  const handleContinueShopping = () => {
+    clearCart(); // Clear cart when continuing to shop
+    navigate("/products");
   };
 
   return (
@@ -178,6 +195,8 @@ export default function CheckoutPage() {
                       onBack={handleBackStep}
                       isLoading={isLoading}
                       orderNumber={orderNumber}
+                      onGoToOrders={handleGoToOrders}
+                      onContinueShopping={handleContinueShopping}
                     />
                   )}
                 </div>
@@ -186,7 +205,7 @@ export default function CheckoutPage() {
               {/* Order Summary Sidebar */}
               <div className="lg:col-span-1">
                 <OrderSummary
-                  items={cartItems}
+                  items={orderNumber ? orderItems : cartItems}
                   total={total}
                   showTitle={true}
                 />

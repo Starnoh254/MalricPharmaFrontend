@@ -14,7 +14,7 @@ export const api = axios.create({
 // Helper function to get auth token from localStorage
 const getAuthToken = (): string | null => {
   try {
-    return localStorage.getItem("authToken");
+    return localStorage.getItem("accessToken");
   } catch (error) {
     console.error("Error accessing localStorage:", error);
     return null;
@@ -70,20 +70,31 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        // Attempt to refresh token
-        const refreshResponse = await api.post("/auth/refresh");
-        const newToken = refreshResponse.data.token;
+        // Get refresh token
+        const refreshToken = localStorage.getItem("refreshToken");
+        if (!refreshToken) {
+          throw new Error("No refresh token available");
+        }
 
-        // Store new token
-        localStorage.setItem("authToken", newToken);
+        // Attempt to refresh token
+        const refreshResponse = await api.post("/auth/refresh", {
+          refreshToken,
+        });
+        const { accessToken, refreshToken: newRefreshToken } =
+          refreshResponse.data.data;
+
+        // Store new tokens
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", newRefreshToken);
 
         // Retry original request with new token
-        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api.request(originalRequest);
       } catch (refreshError) {
         // Refresh failed, clear auth data
         console.error("Token refresh failed:", refreshError);
-        localStorage.removeItem("authToken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         localStorage.removeItem("user");
 
         // Only redirect to login for protected endpoints

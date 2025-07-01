@@ -4,7 +4,7 @@
 // Generic server response wrapper
 export interface ServerResponse<T> {
   status: "success" | "error";
-  result: T;
+  data: T;
   message?: string;
 }
 
@@ -30,7 +30,8 @@ export interface SignupPayload {
 
 export interface AuthResponse {
   user: User;
-  token: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 // API Error types
@@ -45,5 +46,5 @@ export const handleServerResponse = <T>(response: ServerResponse<T>): T => {
   if (response.status !== "success") {
     throw new Error(response.message || "Request failed");
   }
-  return response.result;
+  return response.data;
 };

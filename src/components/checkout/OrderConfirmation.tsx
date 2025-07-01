@@ -8,7 +8,7 @@ import {
   CreditCard,
   MapPin,
 } from "lucide-react";
-import type { ShippingInfo, PaymentInfo } from "../../pages/CheckoutPage";
+import type { ShippingInfo, PaymentInfo } from "../../api/orders";
 
 interface OrderConfirmationProps {
   shippingInfo: ShippingInfo;
@@ -17,6 +17,8 @@ interface OrderConfirmationProps {
   onBack: () => void;
   isLoading: boolean;
   orderNumber: string | null;
+  onGoToOrders?: () => void;
+  onContinueShopping?: () => void;
 }
 
 export default function OrderConfirmation({
@@ -26,68 +28,74 @@ export default function OrderConfirmation({
   onBack,
   isLoading,
   orderNumber,
+  onGoToOrders,
+  onContinueShopping,
 }: OrderConfirmationProps) {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
 
-  const getPaymentMethodDisplay = () => {
+  const getPaymentDisplay = () => {
     switch (paymentInfo.method) {
       case "mpesa":
-        return `M-Pesa (${paymentInfo.mpesaPhone})`;
+        return `M-Pesa (${paymentInfo.phone || "Phone number"})`;
       case "card":
-        return `Card ending in ${paymentInfo.cardNumber?.slice(-4)}`;
-      case "cash_on_delivery":
+        return `Credit/Debit Card`;
+      case "cod":
         return "Cash on Delivery";
       default:
         return paymentInfo.method;
     }
   };
 
-  // Show success state if order was placed
+  const handleConfirm = () => {
+    if (agreedToTerms) {
+      onConfirm();
+    }
+  };
+
+  // Show success message if order is placed
   if (orderNumber) {
     return (
       <div className="text-center py-8">
-        <div className="mx-auto flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-6">
-          <CheckCircle className="w-8 h-8 text-green-600" />
-        </div>
-
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+        <h2 className="text-2xl font-semibold text-gray-900 mb-2">
           Order Placed Successfully!
         </h2>
-        <p className="text-gray-600 mb-6">
-          Thank you for your purchase. Your order has been confirmed.
+        <p className="text-gray-600 mb-4">
+          Your order number is: <strong>{orderNumber}</strong>
         </p>
-
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-          <div className="flex items-center justify-center mb-4">
-            <Package className="w-6 h-6 text-green-600 mr-2" />
-            <span className="font-semibold text-green-800">
-              Order Number: {orderNumber}
-            </span>
+        <p className="text-sm text-gray-500 mb-6">
+          You will receive a confirmation email shortly with your order details
+          and tracking information.
+        </p>
+        <div className="space-y-2 text-sm text-gray-600">
+          <div className="flex items-center justify-center gap-2">
+            <Package className="w-4 h-4" />
+            <span>Your order is being processed</span>
           </div>
-
-          <div className="text-sm text-green-700 space-y-2">
-            <div className="flex items-center justify-center">
-              <Truck className="w-4 h-4 mr-2" />
-              <span>Estimated delivery: 24-48 hours</span>
-            </div>
-            <p>We'll send you email updates about your order status.</p>
+          <div className="flex items-center justify-center gap-2">
+            <Truck className="w-4 h-4" />
+            <span>Expected delivery in 2-3 business days</span>
           </div>
         </div>
 
-        <div className="space-y-3">
-          <button
-            onClick={() => (window.location.href = "/orders")}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors duration-200"
-          >
-            View My Orders
-          </button>
-
-          <button
-            onClick={() => (window.location.href = "/products")}
-            className="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 px-6 py-3 rounded-md font-medium transition-colors duration-200"
-          >
-            Continue Shopping
-          </button>
+        {/* Navigation buttons */}
+        <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center">
+          {onGoToOrders && (
+            <button
+              onClick={onGoToOrders}
+              className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition-colors"
+            >
+              View Order History
+            </button>
+          )}
+          {onContinueShopping && (
+            <button
+              onClick={onContinueShopping}
+              className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Continue Shopping
+            </button>
+          )}
         </div>
       </div>
     );
@@ -95,119 +103,118 @@ export default function OrderConfirmation({
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-6 flex items-center">
-        <Package className="w-5 h-5 mr-2 text-blue-600" />
-        Review & Confirm Order
-      </h2>
+      <div className="flex items-center gap-4 mb-6">
+        <button
+          type="button"
+          onClick={onBack}
+          disabled={isLoading}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors disabled:opacity-50"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Payment
+        </button>
+        <h2 className="text-2xl font-semibold text-gray-900">
+          Review Your Order
+        </h2>
+      </div>
 
       <div className="space-y-6">
-        {/* Shipping Information Review */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <h3 className="font-medium text-gray-900 mb-3 flex items-center">
-            <MapPin className="w-4 h-4 mr-2 text-gray-600" />
-            Shipping Address
-          </h3>
-          <div className="text-sm text-gray-700 space-y-1">
-            <p className="font-medium">{shippingInfo.fullName}</p>
-            <p>{shippingInfo.address}</p>
-            <p>
-              {shippingInfo.city}, {shippingInfo.postalCode}
+        {/* Shipping Information */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <MapPin className="w-5 h-5 text-gray-600" />
+            <h3 className="text-lg font-medium text-gray-900">
+              Shipping Information
+            </h3>
+          </div>
+          <div className="space-y-2">
+            <p className="text-sm">
+              <strong>Name:</strong> {shippingInfo.fullName}
             </p>
-            <p>{shippingInfo.phone}</p>
-            <p>{shippingInfo.email}</p>
-            {shippingInfo.deliveryNotes && (
-              <div className="mt-2 pt-2 border-t border-gray-200">
-                <p className="text-xs text-gray-600">Delivery Notes:</p>
-                <p className="text-sm">{shippingInfo.deliveryNotes}</p>
+            <p className="text-sm">
+              <strong>Email:</strong> {shippingInfo.email}
+            </p>
+            <p className="text-sm">
+              <strong>Phone:</strong> {shippingInfo.phone}
+            </p>
+            <p className="text-sm">
+              <strong>Address:</strong> {shippingInfo.address}
+            </p>
+            <p className="text-sm">
+              <strong>City:</strong> {shippingInfo.city}
+            </p>
+            <p className="text-sm">
+              <strong>Postal Code:</strong> {shippingInfo.postalCode}
+            </p>
+            {shippingInfo.notes && (
+              <div>
+                <strong className="text-sm">Delivery Notes:</strong>
+                <p className="text-sm">{shippingInfo.notes}</p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Payment Method Review */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <h3 className="font-medium text-gray-900 mb-3 flex items-center">
-            <CreditCard className="w-4 h-4 mr-2 text-gray-600" />
-            Payment Method
-          </h3>
-          <p className="text-sm text-gray-700">{getPaymentMethodDisplay()}</p>
-        </div>
-
-        {/* Important Information */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="font-medium text-blue-900 mb-2">
-            Important Information
-          </h3>
-          <ul className="text-sm text-blue-800 space-y-1">
-            <li>• Your order will be processed within 24 hours</li>
-            <li>• Delivery typically takes 24-48 hours within Nairobi</li>
-            <li>
-              • You will receive email confirmation and tracking information
-            </li>
-            <li>
-              • For prescription drugs, you may need to provide additional
-              documentation
-            </li>
-          </ul>
+        {/* Payment Information */}
+        <div className="bg-gray-50 rounded-lg p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <CreditCard className="w-5 h-5 text-gray-600" />
+            <h3 className="text-lg font-medium text-gray-900">
+              Payment Method
+            </h3>
+          </div>
+          <p className="text-sm">{getPaymentDisplay()}</p>
+          {paymentInfo.method === "mpesa" && (
+            <p className="text-xs text-gray-500 mt-2">
+              You will receive an M-Pesa prompt after confirming your order
+            </p>
+          )}
+          {paymentInfo.method === "cod" && (
+            <p className="text-xs text-gray-500 mt-2">
+              Please have the exact amount ready when your order is delivered
+            </p>
+          )}
         </div>
 
         {/* Terms and Conditions */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <label className="flex items-start">
+        <div className="bg-gray-50 rounded-lg p-6">
+          <div className="flex items-start gap-3">
             <input
               type="checkbox"
+              id="terms"
               checked={agreedToTerms}
               onChange={(e) => setAgreedToTerms(e.target.checked)}
-              className="mt-1 mr-3 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             />
-            <span className="text-sm text-gray-700">
+            <label htmlFor="terms" className="text-sm text-gray-700">
               I agree to the{" "}
-              <a
-                href="/terms"
-                className="text-blue-600 hover:text-blue-800 underline"
-              >
+              <a href="#" className="text-blue-600 hover:text-blue-800">
                 Terms and Conditions
               </a>{" "}
               and{" "}
-              <a
-                href="/privacy"
-                className="text-blue-600 hover:text-blue-800 underline"
-              >
+              <a href="#" className="text-blue-600 hover:text-blue-800">
                 Privacy Policy
               </a>
-              . I understand that prescription medications require valid
-              prescriptions and may be subject to additional verification.
-            </span>
-          </label>
+              . I understand that my order will be processed and shipped
+              according to the delivery timeframes provided.
+            </label>
+          </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex justify-between pt-4">
+        {/* Confirm Button */}
+        <div className="flex justify-end">
           <button
-            type="button"
-            onClick={onBack}
-            disabled={isLoading}
-            className="flex items-center text-gray-600 hover:text-gray-800 font-medium disabled:opacity-50"
-          >
-            <ArrowLeft className="w-4 h-4 mr-1" />
-            Back to Payment
-          </button>
-
-          <button
-            onClick={onConfirm}
+            onClick={handleConfirm}
             disabled={!agreedToTerms || isLoading}
-            className="bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white px-8 py-3 rounded-md font-medium transition-colors duration-200 flex items-center"
+            className="px-8 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+              <div className="flex items-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                 Processing Order...
-              </>
+              </div>
             ) : (
-              <>
-                <CheckCircle className="w-4 h-4 mr-2" />
-                Place Order
-              </>
+              "Place Order"
             )}
           </button>
         </div>

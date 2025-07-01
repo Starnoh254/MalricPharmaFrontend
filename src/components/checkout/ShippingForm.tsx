@@ -1,7 +1,7 @@
 // src/components/checkout/ShippingForm.tsx
 import { useState } from "react";
 import { MapPin, Phone, Mail, User, MessageSquare } from "lucide-react";
-import type { ShippingInfo } from "../../pages/CheckoutPage";
+import type { ShippingInfo } from "../../api/orders";
 
 interface ShippingFormProps {
   initialData: ShippingInfo;
@@ -22,7 +22,7 @@ export default function ShippingForm({
       newErrors.fullName = "Full name is required";
     }
 
-    if (!formData.email.trim()) {
+    if (!formData.email?.trim()) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Please enter a valid email";
@@ -197,8 +197,8 @@ export default function ShippingForm({
             Delivery Notes (Optional)
           </label>
           <textarea
-            value={formData.deliveryNotes || ""}
-            onChange={(e) => handleInputChange("deliveryNotes", e.target.value)}
+            value={formData.notes || ""}
+            onChange={(e) => handleInputChange("notes", e.target.value)}
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Any special delivery instructions..."

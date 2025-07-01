@@ -1,6 +1,11 @@
 // src/components/checkout/OrderSummary.tsx
 import { ShoppingBag } from "lucide-react";
 import { formatCurrency } from "../../utils/currency";
+import {
+  getDeliveryFee,
+  calculateOrderTotal,
+  FREE_DELIVERY_THRESHOLD,
+} from "../../utils/pricing";
 
 type CartItem = {
   id: string;
@@ -21,8 +26,8 @@ export default function OrderSummary({
   total,
   showTitle = false,
 }: OrderSummaryProps) {
-  const deliveryFee = 200; // Ksh 200 delivery fee
-  const grandTotal = total + deliveryFee;
+  const deliveryFee = getDeliveryFee(total);
+  const grandTotal = calculateOrderTotal(total);
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 sticky top-8">
@@ -76,7 +81,10 @@ export default function OrderSummary({
       </div>
 
       <div className="mt-6 text-xs text-gray-500">
-        <p>• Free delivery on orders over {formatCurrency(2000)}</p>
+        <p>
+          • Free delivery on orders over{" "}
+          {formatCurrency(FREE_DELIVERY_THRESHOLD)}
+        </p>
         <p>• All prices include applicable taxes</p>
         <p>• Delivery within 24-48 hours</p>
       </div>

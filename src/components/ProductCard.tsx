@@ -35,29 +35,45 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <>
-      <div className="border rounded-lg p-4 shadow-md bg-white hover:shadow-lg transition-shadow">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-primary/20 transition-all duration-300 overflow-hidden group">
         {product.imageUrl && (
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="w-full h-40 object-cover rounded mb-3"
-          />
+          <div className="relative overflow-hidden">
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          </div>
         )}
-        <h3 className="text-lg font-semibold mb-1">{product.name}</h3>
-        <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-          {product.description}
-        </p>
-        <div className="flex items-center justify-between mt-4">
-          <p className="font-bold text-lg text-blue-600">
-            {formatCurrency(product.price)}
+
+        <div className="p-5">
+          <h3 className="text-lg font-semibold text-secondary mb-2 line-clamp-1 group-hover:text-primary transition-colors">
+            {product.name}
+          </h3>
+          <p className="text-sm text-grayText mb-4 line-clamp-2 leading-relaxed">
+            {product.description}
           </p>
-          <button
-            onClick={handleAddToCart}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors duration-200 flex items-center gap-2"
-          >
-            <ShoppingCart className="w-4 h-4" />
-            Add to Cart
-          </button>
+
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="text-xs text-grayText uppercase tracking-wide font-medium">
+                Price
+              </span>
+              <span className="text-xl font-bold text-secondary">
+                {formatCurrency(product.price)}
+              </span>
+            </div>
+
+            <button
+              onClick={handleAddToCart}
+              className="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md transform hover:-translate-y-0.5 active:translate-y-0"
+            >
+              <ShoppingCart className="w-4 h-4" />
+              <span className="hidden sm:inline">Add to Cart</span>
+              <span className="sm:hidden">Add</span>
+            </button>
+          </div>
         </div>
       </div>
 
