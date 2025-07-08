@@ -1,6 +1,6 @@
 // src/components/checkout/ShippingForm.tsx
 import { useState } from "react";
-import { MapPin, Phone, Mail, User, MessageSquare } from "lucide-react";
+import { MapPin, User, MessageSquare } from "lucide-react";
 import type { ShippingInfo } from "../../api/orders";
 
 interface ShippingFormProps {
@@ -67,150 +67,202 @@ export default function ShippingForm({
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-6 flex items-center">
-        <MapPin className="w-5 h-5 mr-2 text-blue-600" />
-        Shipping Information
-      </h2>
+      <div className="mb-8">
+        <h2 className="text-2xl font-bold text-gray-900 flex items-center mb-2">
+          <div className="p-2 bg-blue-100 rounded-lg mr-3">
+            <MapPin className="w-6 h-6 text-blue-600" />
+          </div>
+          Shipping Information
+        </h2>
+        <p className="text-gray-600">
+          Please provide your delivery details for accurate shipping.
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Personal Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <User className="w-4 h-4 inline mr-1" />
-              Full Name *
-            </label>
-            <input
-              type="text"
-              value={formData.fullName}
-              onChange={(e) => handleInputChange("fullName", e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.fullName ? "border-red-500" : "border-gray-300"
-              }`}
-              placeholder="Enter your full name"
-            />
-            {errors.fullName && (
-              <p className="mt-1 text-sm text-red-600">{errors.fullName}</p>
-            )}
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Personal Information Section */}
+        <div className="bg-gray-50 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <User className="w-5 h-5 mr-2 text-gray-600" />
+            Personal Information
+          </h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Full Name *
+              </label>
+              <input
+                type="text"
+                value={formData.fullName}
+                onChange={(e) => handleInputChange("fullName", e.target.value)}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
+                  errors.fullName
+                    ? "border-red-300 focus:border-red-500 bg-red-50"
+                    : "border-gray-200 focus:border-blue-500 bg-white hover:border-gray-300"
+                }`}
+                placeholder="Enter your full name"
+              />
+              {errors.fullName && (
+                <p className="mt-2 text-sm text-red-600 flex items-center">
+                  <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
+                  {errors.fullName}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Phone Number *
+              </label>
+              <input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => handleInputChange("phone", e.target.value)}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
+                  errors.phone
+                    ? "border-red-300 focus:border-red-500 bg-red-50"
+                    : "border-gray-200 focus:border-blue-500 bg-white hover:border-gray-300"
+                }`}
+                placeholder="+254 700 000 000"
+              />
+              {errors.phone && (
+                <p className="mt-2 text-sm text-red-600 flex items-center">
+                  <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
+                  {errors.phone}
+                </p>
+              )}
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              <Phone className="w-4 h-4 inline mr-1" />
-              Phone Number *
+          <div className="mt-6">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
+              Email Address *
             </label>
             <input
-              type="tel"
-              value={formData.phone}
-              onChange={(e) => handleInputChange("phone", e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.phone ? "border-red-500" : "border-gray-300"
+              type="email"
+              value={formData.email}
+              onChange={(e) => handleInputChange("email", e.target.value)}
+              className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
+                errors.email
+                  ? "border-red-300 focus:border-red-500 bg-red-50"
+                  : "border-gray-200 focus:border-blue-500 bg-white hover:border-gray-300"
               }`}
-              placeholder="+254 700 000 000"
+              placeholder="your@email.com"
             />
-            {errors.phone && (
-              <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-            )}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <Mail className="w-4 h-4 inline mr-1" />
-            Email Address *
-          </label>
-          <input
-            type="email"
-            value={formData.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.email ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="your@email.com"
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-          )}
-        </div>
-
-        {/* Address Information */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <MapPin className="w-4 h-4 inline mr-1" />
-            Street Address *
-          </label>
-          <input
-            type="text"
-            value={formData.address}
-            onChange={(e) => handleInputChange("address", e.target.value)}
-            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-              errors.address ? "border-red-500" : "border-gray-300"
-            }`}
-            placeholder="123 Main Street, Building/Apartment"
-          />
-          {errors.address && (
-            <p className="mt-1 text-sm text-red-600">{errors.address}</p>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              City *
-            </label>
-            <input
-              type="text"
-              value={formData.city}
-              onChange={(e) => handleInputChange("city", e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.city ? "border-red-500" : "border-gray-300"
-              }`}
-              placeholder="Nairobi"
-            />
-            {errors.city && (
-              <p className="mt-1 text-sm text-red-600">{errors.city}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Postal Code *
-            </label>
-            <input
-              type="text"
-              value={formData.postalCode}
-              onChange={(e) => handleInputChange("postalCode", e.target.value)}
-              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                errors.postalCode ? "border-red-500" : "border-gray-300"
-              }`}
-              placeholder="00100"
-            />
-            {errors.postalCode && (
-              <p className="mt-1 text-sm text-red-600">{errors.postalCode}</p>
+            {errors.email && (
+              <p className="mt-2 text-sm text-red-600 flex items-center">
+                <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
+                {errors.email}
+              </p>
             )}
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            <MessageSquare className="w-4 h-4 inline mr-1" />
-            Delivery Notes (Optional)
-          </label>
-          <textarea
-            value={formData.notes || ""}
-            onChange={(e) => handleInputChange("notes", e.target.value)}
-            rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Any special delivery instructions..."
-          />
+        {/* Address Information Section */}
+        <div className="bg-gray-50 rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+            <MapPin className="w-5 h-5 mr-2 text-gray-600" />
+            Delivery Address
+          </h3>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Street Address *
+              </label>
+              <input
+                type="text"
+                value={formData.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
+                className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
+                  errors.address
+                    ? "border-red-300 focus:border-red-500 bg-red-50"
+                    : "border-gray-200 focus:border-blue-500 bg-white hover:border-gray-300"
+                }`}
+                placeholder="123 Main Street, Building/Apartment"
+              />
+              {errors.address && (
+                <p className="mt-2 text-sm text-red-600 flex items-center">
+                  <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
+                  {errors.address}
+                </p>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  City *
+                </label>
+                <input
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) => handleInputChange("city", e.target.value)}
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
+                    errors.city
+                      ? "border-red-300 focus:border-red-500 bg-red-50"
+                      : "border-gray-200 focus:border-blue-500 bg-white hover:border-gray-300"
+                  }`}
+                  placeholder="Nairobi"
+                />
+                {errors.city && (
+                  <p className="mt-2 text-sm text-red-600 flex items-center">
+                    <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
+                    {errors.city}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Postal Code *
+                </label>
+                <input
+                  type="text"
+                  value={formData.postalCode}
+                  onChange={(e) =>
+                    handleInputChange("postalCode", e.target.value)
+                  }
+                  className={`w-full px-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
+                    errors.postalCode
+                      ? "border-red-300 focus:border-red-500 bg-red-50"
+                      : "border-gray-200 focus:border-blue-500 bg-white hover:border-gray-300"
+                  }`}
+                  placeholder="00100"
+                />
+                {errors.postalCode && (
+                  <p className="mt-2 text-sm text-red-600 flex items-center">
+                    <span className="w-1 h-1 bg-red-500 rounded-full mr-2"></span>
+                    {errors.postalCode}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                <MessageSquare className="w-4 h-4 inline mr-1" />
+                Delivery Notes (Optional)
+              </label>
+              <textarea
+                value={formData.notes || ""}
+                onChange={(e) => handleInputChange("notes", e.target.value)}
+                rows={3}
+                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 bg-white hover:border-gray-300 transition-all duration-200"
+                placeholder="Any special delivery instructions (e.g., gate code, landmark, preferred time)"
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="flex justify-end pt-4">
+        {/* Submit Button */}
+        <div className="flex justify-end pt-8">
           <button
             type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors duration-200"
+            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 text-white font-bold rounded-xl hover:from-blue-700 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-blue-200 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl"
           >
-            Continue to Payment
+            Continue to Payment →
           </button>
         </div>
       </form>

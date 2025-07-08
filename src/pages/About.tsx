@@ -16,7 +16,7 @@ import Testimonials from "../components/Testimonials";
 import AnimatedCounter from "../components/AnimatedCounter";
 import { useInView } from "../hooks/useCountUp";
 
-function Home() {
+function About() {
   // Hook to detect when stats section comes into view
   const { ref: statsRef, isInView: statsInView } = useInView(0.3);
 
@@ -53,7 +53,7 @@ function Home() {
       title: "Prescription Medications",
       description:
         "Wide range of prescription drugs with proper verification and consultation.",
-      link: "/products",
+      link: "/",
     },
     {
       icon: Stethoscope,
@@ -67,7 +67,7 @@ function Home() {
       title: "Wellness Products",
       description:
         "Supplements, vitamins, and health products for your overall wellbeing.",
-      link: "/products",
+      link: "/",
     },
   ];
 
@@ -193,7 +193,7 @@ function Home() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              to="/products"
+              to="/"
               className="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors inline-flex items-center justify-center gap-2"
             >
               Shop Products
@@ -248,4 +248,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default About;

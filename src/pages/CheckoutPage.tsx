@@ -160,55 +160,80 @@ export default function CheckoutPage() {
 
   return (
     <MainLayout>
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 py-4 md:py-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="max-w-5xl mx-auto">
+            {/* Header with enhanced styling */}
+            <div className="text-center mb-6 md:mb-8">
+              <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent mb-2">
+                Secure Checkout
+              </h1>
+              <p className="text-gray-600 text-base md:text-lg px-4">
+                Complete your order in just a few simple steps
+              </p>
+            </div>
 
             {/* Progress Steps */}
             <CheckoutSteps currentStep={currentStep} />
 
-            <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Mobile Order Summary (shown at top on mobile) */}
+            <div className="block xl:hidden mt-8 mb-6">
+              <OrderSummary
+                items={orderNumber ? orderItems : cartItems}
+                total={total}
+                showTitle={true}
+              />
+            </div>
+
+            <div className="mt-8 md:mt-12 grid grid-cols-1 xl:grid-cols-3 gap-6 md:gap-8">
               {/* Main Content */}
-              <div className="lg:col-span-2">
-                <div className="bg-white rounded-lg shadow-sm p-6">
-                  {currentStep === "shipping" && (
-                    <ShippingForm
-                      initialData={shippingInfo}
-                      onSubmit={handleShippingSubmit}
-                    />
-                  )}
+              <div className="xl:col-span-2">
+                <div className="bg-white rounded-2xl shadow-xl border-0 p-4 md:p-8 relative overflow-hidden">
+                  {/* Decorative background elements - hidden on mobile for cleaner look */}
+                  <div className="hidden md:block absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-green-100 rounded-full -translate-y-16 translate-x-16 opacity-50"></div>
+                  <div className="hidden md:block absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-green-100 to-blue-100 rounded-full translate-y-12 -translate-x-12 opacity-50"></div>
 
-                  {currentStep === "payment" && (
-                    <PaymentForm
-                      initialData={paymentInfo}
-                      onSubmit={handlePaymentSubmit}
-                      onBack={handleBackStep}
-                    />
-                  )}
+                  <div className="relative z-10">
+                    {currentStep === "shipping" && (
+                      <ShippingForm
+                        initialData={shippingInfo}
+                        onSubmit={handleShippingSubmit}
+                      />
+                    )}
 
-                  {currentStep === "confirmation" && (
-                    <OrderConfirmation
-                      shippingInfo={shippingInfo}
-                      paymentInfo={paymentInfo}
-                      onConfirm={handleOrderConfirm}
-                      onBack={handleBackStep}
-                      isLoading={isLoading}
-                      orderNumber={orderNumber}
-                      onGoToOrders={handleGoToOrders}
-                      onContinueShopping={handleContinueShopping}
-                    />
-                  )}
+                    {currentStep === "payment" && (
+                      <PaymentForm
+                        initialData={paymentInfo}
+                        onSubmit={handlePaymentSubmit}
+                        onBack={handleBackStep}
+                      />
+                    )}
+
+                    {currentStep === "confirmation" && (
+                      <OrderConfirmation
+                        shippingInfo={shippingInfo}
+                        paymentInfo={paymentInfo}
+                        onConfirm={handleOrderConfirm}
+                        onBack={handleBackStep}
+                        isLoading={isLoading}
+                        orderNumber={orderNumber}
+                        onGoToOrders={handleGoToOrders}
+                        onContinueShopping={handleContinueShopping}
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Order Summary Sidebar */}
-              <div className="lg:col-span-1">
-                <OrderSummary
-                  items={orderNumber ? orderItems : cartItems}
-                  total={total}
-                  showTitle={true}
-                />
+              {/* Order Summary Sidebar - Desktop only */}
+              <div className="hidden xl:block xl:col-span-1">
+                <div className="sticky top-8">
+                  <OrderSummary
+                    items={orderNumber ? orderItems : cartItems}
+                    total={total}
+                    showTitle={true}
+                  />
+                </div>
               </div>
             </div>
           </div>

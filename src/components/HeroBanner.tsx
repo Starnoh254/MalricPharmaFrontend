@@ -17,7 +17,7 @@ function HeroBanner() {
             home.
           </p>
           <Link
-            to="/products"
+            to="/"
             className="inline-block bg-primary text-white px-6 py-3 rounded-xl shadow-md hover:bg-secondary transition-colors"
           >
             Shop Now

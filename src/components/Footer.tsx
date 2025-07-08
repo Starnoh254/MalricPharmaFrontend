@@ -38,11 +38,11 @@ export default function Footer() {
             </h3>
             <div className="space-y-3">
               <a
-                href="tel:+254714296170"
+                href="tel:+254708733882"
                 className="flex items-center gap-2 text-sm text-gray-300 hover:text-primary transition-colors"
               >
                 <Phone className="w-4 h-4 text-primary flex-shrink-0" />
-                <span>+254 714 296 170</span>
+                <span>+254 708 733 882</span>
               </a>
               <a
                 href="mailto:info@malricpharma.co.ke"

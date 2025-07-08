@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./App.css";
-import Home from "./pages/Home";
+import About from "./pages/About"; // Renamed from Home
 import Products from "./pages/Products";
 import LoginForm from "./pages/LoginForm";
 import SignUpForm from "./pages/SignUpForm";
@@ -13,8 +13,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* Root path now shows products for immediate shopping experience */}
+        <Route path="/" element={<Products />} />
+
+        {/* About page contains the previous home page content */}
+        <Route path="/about" element={<About />} />
+
+        {/* Keep products route for backward compatibility and navigation */}
         <Route path="/products" element={<Products />} />
+
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route

@@ -1,8 +1,10 @@
-# Malric Pharma Homepage Enhancement Documentation
+# Malric Pharma Homepage Enhancement & Restructuring Documentation
 
 ## 🎯 Overview
 
-The homepage has been completely redesigned from a simple 2-section layout to a comprehensive, professional pharmacy website that builds trust, showcases services, and drives conversions.
+**Phase 1**: The homepage was enhanced from a simple 2-section layout to a comprehensive, professional pharmacy website.
+
+**Phase 2**: The entire site structure was restructured for optimal e-commerce UX - the products page is now the landing page (root `/`) to encourage immediate shopping, with the previous homepage content moved to a dedicated `/about` page.
 
 ## 📊 Before vs After
 
@@ -85,6 +87,31 @@ The homepage has been completely redesigned from a simple 2-section layout to a 
 - **Purpose**: Social proof from real customers
 - **Impact**: Final trust-building before conversion
 - **Features**: Customer success stories
+
+## 🔄 Site Restructuring (Phase 2)
+
+### **E-commerce UX Optimization**
+
+**New Structure**:
+
+- **Root (`/`)**: Products page (immediate shopping experience)
+- **About (`/about`)**: Previous homepage content (company info, features, services)
+- **Navigation**: "Shop" (/) and "About" (/about)
+
+### **Benefits**:
+
+1. **Impulse Buying**: Users land directly on products
+2. **Reduced Friction**: No extra click to reach shopping
+3. **Conversion Focus**: Landing page optimized for purchasing
+4. **Professional Separation**: Company info properly organized in dedicated section
+
+### **Technical Changes**:
+
+- Renamed `Home.tsx` to `About.tsx`
+- Updated routing in `App.tsx`
+- Modified navigation links in `navLinks.ts`
+- Updated all internal CTAs and links
+- Maintained backward compatibility with `/products` route
 
 ## 🎨 Design Principles Applied
 
