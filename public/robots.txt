@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Allow: /products
+Allow: /about
+Allow: /cart
+Allow: /checkout
+Allow: /login
+Allow: /signup
+
+# Disallow admin or private pages
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+
+# Sitemap location
+Sitemap: https://malricpharma.co.ke/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1

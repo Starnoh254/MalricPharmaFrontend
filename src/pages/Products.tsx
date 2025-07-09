@@ -8,6 +8,7 @@ import UrgencyTimer from "../components/UrgencyTimer";
 import TrustBadges from "../components/TrustBadges";
 import RecentPurchaseNotification from "../components/RecentPurchaseNotification";
 import HeroCarousel from "../components/HeroCarousel";
+import SEOHelmet from "../components/SEOHelmet";
 import { useEffect, useState } from "react";
 import { api } from "../utils/axios";
 import { Star, Users, Zap } from "lucide-react";
@@ -190,136 +191,166 @@ function Products() {
   );
 
   return (
-    <MainLayout>
-      <div className="min-h-screen bg-gray-50">
-        {/* Hero Carousel */}
-        <HeroCarousel className="mb-0" />
+    <>
+      <SEOHelmet
+        title="Buy Medicines Online Kenya - Malric Pharma | Prescription & OTC Drugs"
+        description="Shop 1000+ medicines and health products online in Kenya. Prescription drugs, over-the-counter medicines, vitamins & supplements. Free same-day delivery in Nairobi."
+        keywords="buy medicines online Kenya, prescription drugs Kenya, over the counter medicines, pharmacy Kenya, medical supplies Kenya, vitamins supplements"
+        url="https://malricpharma.co.ke/products"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "Pharmacy",
+          name: "Malric Pharma",
+          description:
+            "Kenya's leading online pharmacy offering quality medicines and health products",
+          url: "https://malricpharma.co.ke",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "123 Kimathi Street",
+            addressLocality: "Nairobi",
+            addressCountry: "Kenya",
+          },
+          telephone: "+254-700-000-000",
+          openingHours: "Mo-Su 00:00-24:00",
+          priceRange: "$$",
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.8",
+            reviewCount: "256",
+          },
+        }}
+      />
+      <MainLayout>
+        <div className="min-h-screen bg-gray-50">
+          {/* Hero Carousel */}
+          <HeroCarousel className="mb-0" />
 
-        {/* Flash Sale Timer - Prominent Placement */}
-        <div className="bg-red-600 text-white py-4">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center">
-              <UrgencyTimer
-                endTime={flashSaleEndTime}
-                className="max-w-md mx-auto"
+          {/* Flash Sale Timer - Prominent Placement */}
+          <div className="bg-red-600 text-white py-4">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="text-center">
+                <UrgencyTimer
+                  endTime={flashSaleEndTime}
+                  className="max-w-md mx-auto"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Promotional Banners */}
+          <div className="bg-gray-100 py-6">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <PromoBanner type="flash-sale" />
+                <PromoBanner type="free-shipping" />
+                <PromoBanner type="first-time" />
+              </div>
+            </div>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="bg-white py-6 border-b border-gray-100">
+            <div className="max-w-7xl mx-auto px-6">
+              <TrustBadges />
+            </div>
+          </div>
+
+          {/* Social Proof */}
+          <div className="bg-green-50 py-4 border-b border-green-100">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="flex items-center justify-center gap-8 text-center">
+                <div className="flex items-center gap-2">
+                  <Users className="w-5 h-5 text-green-600" />
+                  <span className="text-sm font-medium text-green-800">
+                    10,000+ Happy Customers
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="w-5 h-5 text-yellow-500 fill-current" />
+                  <span className="text-sm font-medium text-green-800">
+                    4.8/5 Average Rating
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Zap className="w-5 h-5 text-green-600" />
+                  <span className="text-sm font-medium text-green-800">
+                    Same Day Delivery
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Products Section */}
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold text-secondary mb-2">
+                🔥 Hot Deals & Best Sellers
+              </h2>
+              <p className="text-grayText">
+                Discover our most popular medications with exclusive discounts
+              </p>
+            </div>
+
+            {/* Search and Filter */}
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <SearchBar onSearch={setSearch} />
+                <CategoryFilter
+                  categories={["Antibiotics", "Painkillers", "Vitamins"]}
+                  selectedCategory={category}
+                  onCategoryChange={setCategory}
+                />
+              </div>
+            </div>
+
+            {/* Products Grid */}
+            <div className="mb-8">
+              <ProductList products={filteredProducts} />
+            </div>
+
+            {/* Pagination */}
+            <div className="flex justify-center">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
               />
             </div>
           </div>
-        </div>
 
-        {/* Promotional Banners */}
-        <div className="bg-gray-100 py-6">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <PromoBanner type="flash-sale" />
-              <PromoBanner type="free-shipping" />
-              <PromoBanner type="first-time" />
-            </div>
-          </div>
-        </div>
-
-        {/* Trust Badges */}
-        <div className="bg-white py-6 border-b border-gray-100">
-          <div className="max-w-7xl mx-auto px-6">
-            <TrustBadges />
-          </div>
-        </div>
-
-        {/* Social Proof */}
-        <div className="bg-green-50 py-4 border-b border-green-100">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex items-center justify-center gap-8 text-center">
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-green-600" />
-                <span className="text-sm font-medium text-green-800">
-                  10,000+ Happy Customers
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-500 fill-current" />
-                <span className="text-sm font-medium text-green-800">
-                  4.8/5 Average Rating
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Zap className="w-5 h-5 text-green-600" />
-                <span className="text-sm font-medium text-green-800">
-                  Same Day Delivery
-                </span>
+          {/* Bottom CTA Section */}
+          <div className="bg-secondary text-white py-12">
+            <div className="max-w-4xl mx-auto px-6 text-center">
+              <h3 className="text-3xl font-bold mb-4">
+                Need Help Finding the Right Medication?
+              </h3>
+              <p className="text-lg text-gray-300 mb-6">
+                Our licensed pharmacists are available 24/7 to provide
+                professional consultation
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <a
+                  href="tel:+254708733882"
+                  className="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
+                >
+                  📞 Call Pharmacist Now
+                </a>
+                <a
+                  href="https://wa.me/+254708733882"
+                  className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
+                >
+                  💬 WhatsApp Consultation
+                </a>
               </div>
             </div>
           </div>
+
+          {/* Recent Purchase Notifications */}
+          <RecentPurchaseNotification />
         </div>
-
-        {/* Products Section */}
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <div className="mb-8">
-            <h2 className="text-3xl font-bold text-secondary mb-2">
-              🔥 Hot Deals & Best Sellers
-            </h2>
-            <p className="text-grayText">
-              Discover our most popular medications with exclusive discounts
-            </p>
-          </div>
-
-          {/* Search and Filter */}
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <SearchBar onSearch={setSearch} />
-              <CategoryFilter
-                categories={["Antibiotics", "Painkillers", "Vitamins"]}
-                selectedCategory={category}
-                onCategoryChange={setCategory}
-              />
-            </div>
-          </div>
-
-          {/* Products Grid */}
-          <div className="mb-8">
-            <ProductList products={filteredProducts} />
-          </div>
-
-          {/* Pagination */}
-          <div className="flex justify-center">
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
-        </div>
-
-        {/* Bottom CTA Section */}
-        <div className="bg-secondary text-white py-12">
-          <div className="max-w-4xl mx-auto px-6 text-center">
-            <h3 className="text-3xl font-bold mb-4">
-              Need Help Finding the Right Medication?
-            </h3>
-            <p className="text-lg text-gray-300 mb-6">
-              Our licensed pharmacists are available 24/7 to provide
-              professional consultation
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="tel:+254708733882"
-                className="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-              >
-                📞 Call Pharmacist Now
-              </a>
-              <a
-                href="https://wa.me/+254708733882"
-                className="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
-              >
-                💬 WhatsApp Consultation
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Recent Purchase Notifications */}
-        <RecentPurchaseNotification />
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </>
   );
 }
 

@@ -9,6 +9,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import MainLayout from "../components/MainLayout";
+import SEOHelmet from "../components/SEOHelmet";
 import { useCart } from "../context/CartContext";
 import CartItem from "../components/CartItem";
 import { formatCurrency } from "../utils/currency";
@@ -147,70 +148,78 @@ export default function CartPage() {
   );
 
   return (
-    <MainLayout>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 py-4 md:py-8">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
-          {/* Header */}
-          <div className="text-center mb-6 md:mb-8">
-            <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent mb-2">
-              Shopping Cart
-            </h1>
-            <p className="text-gray-600 text-base md:text-lg px-4">
-              Review your items and proceed to checkout
-            </p>
-          </div>
+    <>
+      <SEOHelmet
+        title="Shopping Cart - Malric Pharma | Review Your Medicine Orders"
+        description="Review your selected medicines and health products. Secure checkout with free delivery on orders over KES 2,000 in Nairobi."
+        keywords="shopping cart, medicine orders, secure checkout, pharmacy cart Kenya"
+        url="https://malricpharma.co.ke/cart"
+      />
+      <MainLayout>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 py-4 md:py-8">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+            {/* Header */}
+            <div className="text-center mb-6 md:mb-8">
+              <h1 className="text-2xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent mb-2">
+                Shopping Cart
+              </h1>
+              <p className="text-gray-600 text-base md:text-lg px-4">
+                Review your items and proceed to checkout
+              </p>
+            </div>
 
-          {cartItems.length === 0 ? (
-            <EmptyCartState />
-          ) : (
-            <>
-              {/* Mobile Summary (shown at top on mobile) */}
-              <div className="block lg:hidden mb-6">
-                <CartSummary />
-              </div>
+            {cartItems.length === 0 ? (
+              <EmptyCartState />
+            ) : (
+              <>
+                {/* Mobile Summary (shown at top on mobile) */}
+                <div className="block lg:hidden mb-6">
+                  <CartSummary />
+                </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
-                {/* Cart Items */}
-                <div className="lg:col-span-2 space-y-4 md:space-y-6">
-                  {/* Items Header */}
-                  <div className="bg-white rounded-2xl border border-gray-200 p-4 md:p-6 shadow-sm">
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <h2 className="text-lg md:text-xl font-semibold text-gray-900 flex items-center gap-2">
-                        <ShoppingCart className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
-                        <span className="text-sm md:text-base">
-                          Your Items ({itemCount})
-                        </span>
-                      </h2>
-                      {cartItems.length > 0 && (
-                        <button
-                          onClick={clearCart}
-                          className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200 text-xs md:text-sm font-medium touch-manipulation"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          <span className="hidden sm:inline">Clear Cart</span>
-                          <span className="sm:hidden">Clear</span>
-                        </button>
-                      )}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+                  {/* Cart Items */}
+                  <div className="lg:col-span-2 space-y-4 md:space-y-6">
+                    {/* Items Header */}
+                    <div className="bg-white rounded-2xl border border-gray-200 p-4 md:p-6 shadow-sm">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <h2 className="text-lg md:text-xl font-semibold text-gray-900 flex items-center gap-2">
+                          <ShoppingCart className="w-4 h-4 md:w-5 md:h-5 text-blue-600" />
+                          <span className="text-sm md:text-base">
+                            Your Items ({itemCount})
+                          </span>
+                        </h2>
+                        {cartItems.length > 0 && (
+                          <button
+                            onClick={clearCart}
+                            className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-all duration-200 text-xs md:text-sm font-medium touch-manipulation"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            <span className="hidden sm:inline">Clear Cart</span>
+                            <span className="sm:hidden">Clear</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Cart Items List */}
+                    <div className="space-y-3 md:space-y-4">
+                      {cartItems.map((item) => (
+                        <CartItem key={item.id} {...item} />
+                      ))}
                     </div>
                   </div>
 
-                  {/* Cart Items List */}
-                  <div className="space-y-3 md:space-y-4">
-                    {cartItems.map((item) => (
-                      <CartItem key={item.id} {...item} />
-                    ))}
+                  {/* Cart Summary Sidebar - Desktop only */}
+                  <div className="hidden lg:block lg:col-span-1">
+                    <CartSummary />
                   </div>
                 </div>
-
-                {/* Cart Summary Sidebar - Desktop only */}
-                <div className="hidden lg:block lg:col-span-1">
-                  <CartSummary />
-                </div>
-              </div>
-            </>
-          )}
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    </MainLayout>
+      </MainLayout>
+    </>
   );
 }
