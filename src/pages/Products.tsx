@@ -4,7 +4,7 @@ import ProductList from "../components/ProductList";
 import CategoryFilter from "../components/CategoryFilter";
 import Pagination from "../components/Pagination";
 import PromoBanner from "../components/PromoBanner";
-import UrgencyTimer from "../components/UrgencyTimer";
+// import UrgencyTimer from "../components/UrgencyTimer";
 import TrustBadges from "../components/TrustBadges";
 import RecentPurchaseNotification from "../components/RecentPurchaseNotification";
 import HeroCarousel from "../components/HeroCarousel";
@@ -41,7 +41,7 @@ function Products() {
   const limit = 10;
 
   // Flash sale end time (24 hours from now for demo)
-  const flashSaleEndTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
+  // const flashSaleEndTime = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -193,9 +193,9 @@ function Products() {
   return (
     <>
       <SEOHelmet
-        title="Buy Medicines Online Kenya - Malric Pharma | Prescription & OTC Drugs"
-        description="Shop 1000+ medicines and health products online in Kenya. Prescription drugs, over-the-counter medicines, vitamins & supplements. Free same-day delivery in Nairobi."
-        keywords="buy medicines online Kenya, prescription drugs Kenya, over the counter medicines, pharmacy Kenya, medical supplies Kenya, vitamins supplements"
+        title="Online Pharmacies Kenya - Malric Pharma | Buy Medicines Online"
+        description="Leading online pharmacy in Kenya. Buy prescription drugs, over-the-counter medicines & health products online. Licensed pharmacy with free same-day delivery in Nairobi."
+        keywords="online pharmacies Kenya, online pharmacy Kenya, buy medicines online Kenya, prescription drugs Kenya, pharmacy Kenya, medical supplies Kenya, online chemist Kenya"
         url="https://malricpharma.co.ke/products"
         schema={{
           "@context": "https://schema.org",
@@ -226,7 +226,7 @@ function Products() {
           <HeroCarousel className="mb-0" />
 
           {/* Flash Sale Timer - Prominent Placement */}
-          <div className="bg-red-600 text-white py-4">
+          {/* <div className="bg-red-600 text-white py-4">
             <div className="max-w-7xl mx-auto px-6">
               <div className="text-center">
                 <UrgencyTimer
@@ -234,6 +234,20 @@ function Products() {
                   className="max-w-md mx-auto"
                 />
               </div>
+            </div>
+          </div> */}
+
+          {/* Main SEO Heading */}
+          <div className="bg-white py-8">
+            <div className="max-w-7xl mx-auto px-6 text-center">
+              <h1 className="text-4xl font-bold text-secondary mb-4">
+                Online Pharmacies Kenya - Licensed & Trusted
+              </h1>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Malric Pharma is among the leading online pharmacies in Kenya,
+                offering quality medicines, prescription drugs, and health
+                products with free same-day delivery in Nairobi.
+              </p>
             </div>
           </div>
 

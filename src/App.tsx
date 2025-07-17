@@ -8,6 +8,8 @@ import SignUpForm from "./pages/SignUpForm";
 import CartPage from "./pages/CartPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderHistory from "./pages/OrderHistory";
+import BlogPage from "./pages/BlogPage";
+import OnlinePharmaciesKenyaBlog from "./pages/OnlinePharmaciesKenyaBlog";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -24,24 +26,17 @@ function App() {
           {/* Keep products route for backward compatibility and navigation */}
           <Route path="/products" element={<Products />} />
 
+          {/* Blog routes */}
+          <Route path="/blog" element={<BlogPage />} />
+          <Route
+            path="/blog/online-pharmacies-kenya"
+            element={<OnlinePharmaciesKenyaBlog />}
+          />
+
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignUpForm />} />
-          <Route
-            path="/cart"
-            element={
-              <PrivateRoute>
-                <CartPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/checkout"
-            element={
-              <PrivateRoute>
-                <CheckoutPage />
-              </PrivateRoute>
-            }
-          />
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
           <Route
             path="/orders"
             element={
