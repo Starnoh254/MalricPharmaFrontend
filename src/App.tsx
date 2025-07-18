@@ -3,6 +3,7 @@ import { HelmetProvider } from "react-helmet-async";
 import "./App.css";
 import About from "./pages/About"; // Renamed from Home
 import Products from "./pages/Products";
+import CategoryPage from "./pages/CategoryPage";
 import LoginForm from "./pages/LoginForm";
 import SignUpForm from "./pages/SignUpForm";
 import CartPage from "./pages/CartPage";
@@ -25,6 +26,9 @@ function App() {
 
           {/* Keep products route for backward compatibility and navigation */}
           <Route path="/products" element={<Products />} />
+
+          {/* Category routes */}
+          <Route path="/category/:categoryName" element={<CategoryPage />} />
 
           {/* Blog routes */}
           <Route path="/blog" element={<BlogPage />} />

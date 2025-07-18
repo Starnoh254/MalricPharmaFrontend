@@ -2,6 +2,7 @@ import MainLayout from "../components/MainLayout";
 import SearchBar from "../components/SearchBar";
 import ProductList from "../components/ProductList";
 import CategoryFilter from "../components/CategoryFilter";
+import CategoryGrid from "../components/CategoryGrid";
 import Pagination from "../components/Pagination";
 import PromoBanner from "../components/PromoBanner";
 // import UrgencyTimer from "../components/UrgencyTimer";
@@ -12,6 +13,7 @@ import SEOHelmet from "../components/SEOHelmet";
 import { useEffect, useState } from "react";
 import { api } from "../utils/axios";
 import { Star, Users, Zap } from "lucide-react";
+import { useProductFilter } from "../utils/productFilters";
 
 interface Product {
   id: string;
@@ -38,6 +40,7 @@ function Products() {
   const [category, setCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [showCategoryGrid, setShowCategoryGrid] = useState(false);
   const limit = 10;
 
   // Flash sale end time (24 hours from now for demo)
@@ -176,6 +179,101 @@ function Products() {
             category: "Supplements",
             imageUrl: "/api/placeholder/300/200",
           },
+          {
+            id: "7",
+            name: "Azithromycin 500mg",
+            description:
+              "Antibiotic for respiratory tract infections. Effective against bacteria.",
+            price: 1800,
+            originalPrice: 2100,
+            discount: 14,
+            stockCount: 10,
+            rating: 4.7,
+            reviewCount: 145,
+            viewingCount: 7,
+            lastPurchased: "1 hour ago",
+            freeShippingEligible: true,
+            category: "Antibiotics",
+            imageUrl: "/api/placeholder/300/200",
+          },
+          {
+            id: "8",
+            name: "Baby Paracetamol Syrup",
+            description:
+              "Safe and effective fever reducer for infants and children.",
+            price: 650,
+            stockCount: 20,
+            rating: 4.8,
+            reviewCount: 89,
+            viewingCount: 3,
+            lastPurchased: "2 hours ago",
+            freeShippingEligible: false,
+            category: "Baby Care",
+            imageUrl: "/api/placeholder/300/200",
+          },
+          {
+            id: "9",
+            name: "First Aid Bandages",
+            description:
+              "Sterile adhesive bandages for cuts and wounds. Pack of 50.",
+            price: 450,
+            stockCount: 35,
+            rating: 4.3,
+            reviewCount: 67,
+            viewingCount: 2,
+            lastPurchased: "4 hours ago",
+            freeShippingEligible: false,
+            category: "First Aid",
+            imageUrl: "/api/placeholder/300/200",
+          },
+          {
+            id: "10",
+            name: "Vitamin C 1000mg",
+            description:
+              "Immune system booster. High-potency vitamin C tablets.",
+            price: 1100,
+            originalPrice: 1400,
+            discount: 21,
+            isPopular: true,
+            stockCount: 30,
+            rating: 4.6,
+            reviewCount: 234,
+            viewingCount: 11,
+            lastPurchased: "1 hour ago",
+            freeShippingEligible: true,
+            category: "Vitamins",
+            imageUrl: "/api/placeholder/300/200",
+          },
+          {
+            id: "11",
+            name: "Protein Powder",
+            description:
+              "Whey protein supplement for muscle building and recovery.",
+            price: 3200,
+            stockCount: 8,
+            rating: 4.5,
+            reviewCount: 156,
+            viewingCount: 5,
+            lastPurchased: "3 hours ago",
+            freeShippingEligible: true,
+            category: "Supplements",
+            imageUrl: "/api/placeholder/300/200",
+          },
+          {
+            id: "12",
+            name: "Diclofenac 50mg",
+            description:
+              "Anti-inflammatory medication for joint pain and arthritis.",
+            price: 750,
+            stockCount: 15,
+            rating: 4.4,
+            reviewCount: 98,
+            viewingCount: 6,
+            lastPurchased: "2 hours ago",
+            freeShippingEligible: false,
+            category: "Painkillers",
+            imageUrl: "/api/placeholder/300/200",
+          },
         ];
 
         setProducts(demoProducts);
@@ -186,9 +284,22 @@ function Products() {
     fetchProducts();
   }, [currentPage, category]);
 
-  const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase())
+  // Use the product filter service
+  const { filteredProducts, stats, filteredCount } = useProductFilter(
+    products,
+    {
+      search,
+      category,
+      sortBy: "popular",
+      sortOrder: "desc",
+    }
   );
+
+  // Debug logging
+  console.log("Current category:", category);
+  console.log("Total products:", products.length);
+  console.log("Filtered products:", filteredCount);
+  console.log("Products by category:", stats);
 
   return (
     <>
@@ -306,21 +417,110 @@ function Products() {
               </p>
             </div>
 
+            {/* Category Grid Toggle */}
+            <div className="text-center mb-8">
+              <button
+                onClick={() => setShowCategoryGrid(!showCategoryGrid)}
+                className="bg-gradient-to-r from-blue-600 to-green-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-blue-700 hover:to-green-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                {showCategoryGrid ? "Hide Categories" : "Shop by Category"}
+              </button>
+            </div>
+
+            {/* Category Grid */}
+            {showCategoryGrid && (
+              <div className="mb-12">
+                <CategoryGrid
+                  onCategorySelect={(cat) => {
+                    setCategory(cat);
+                    setShowCategoryGrid(false);
+                  }}
+                />
+              </div>
+            )}
+
             {/* Search and Filter */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <SearchBar onSearch={setSearch} />
                 <CategoryFilter
-                  categories={["Antibiotics", "Painkillers", "Vitamins"]}
+                  categories={[
+                    "Antibiotics",
+                    "Painkillers",
+                    "Vitamins",
+                    "Supplements",
+                    "Baby Care",
+                    "First Aid",
+                  ]}
                   selectedCategory={category}
                   onCategoryChange={setCategory}
                 />
+              </div>
+
+              {/* Filter Results Info */}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span>
+                    {category && category !== "All" ? (
+                      <>
+                        Showing <strong>{filteredCount}</strong> products in{" "}
+                        <strong>{category}</strong>
+                      </>
+                    ) : (
+                      <>
+                        Showing <strong>{filteredCount}</strong> products
+                        {search && (
+                          <>
+                            {" "}
+                            matching "<strong>{search}</strong>"
+                          </>
+                        )}
+                      </>
+                    )}
+                  </span>
+                  {(category || search) && (
+                    <button
+                      onClick={() => {
+                        setCategory("All");
+                        setSearch("");
+                      }}
+                      className="text-primary hover:text-primary/80 font-medium"
+                    >
+                      Clear all filters
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Products Grid */}
             <div className="mb-8">
-              <ProductList products={filteredProducts} />
+              {filteredProducts.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">🔍</div>
+                  <h3 className="text-xl font-semibold text-gray-600 mb-2">
+                    No products found
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    {category && category !== "All"
+                      ? `No products available in "${category}" category`
+                      : search
+                      ? `No products match "${search}"`
+                      : "No products available"}
+                  </p>
+                  <button
+                    onClick={() => {
+                      setCategory("All");
+                      setSearch("");
+                    }}
+                    className="bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary/90 transition-colors"
+                  >
+                    Clear filters & browse all products
+                  </button>
+                </div>
+              ) : (
+                <ProductList products={filteredProducts} />
+              )}
             </div>
 
             {/* Pagination */}
