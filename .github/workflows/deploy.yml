@@ -20,7 +20,7 @@ jobs:
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm ci
+      run: npm ci --legacy-peer-deps
     
     - name: Lint code
       run: npm run lint
@@ -93,13 +93,13 @@ jobs:
           
           # Install/update dependencies
           if command -v npm >/dev/null 2>&1; then
-            npm ci
+            npm ci --legacy-peer-deps
           else
             echo "❌ NPM not found. Trying alternative methods..."
             # Try with full path if found
             if [ -n "$NPM_PATH" ]; then
               echo "Using NPM from: $NPM_PATH"
-              $NPM_PATH ci
+              $NPM_PATH ci --legacy-peer-deps
             else
               echo "❌ Cannot find NPM. Please ensure Node.js is properly installed."
               exit 1
