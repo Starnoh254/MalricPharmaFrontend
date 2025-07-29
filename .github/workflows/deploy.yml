@@ -2,35 +2,162 @@ name: Deploy to VPS
 
 on:
   push:
-    branches:
-      - main  # Trigger deployment on pushes to the 'main' branch
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
-
+    
     steps:
-    # Checkout the repo
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    # Deploy to VPS using SSH
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Lint code
+      run: npm run lint
+    
+    - name: Build application
+      run: npm run build
+    
+    - name: Test build
+      run: npm run preview &
+      
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - uses: actions/checkout@v4
+    
     - name: Deploy to VPS
-      uses: appleboy/ssh-action@v0.1.7
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USER }}
+        username: ${{ secrets.VPS_USERNAME }}
         key: ${{ secrets.VPS_SSH_KEY }}
+        port: ${{ secrets.VPS_PORT || 22 }}
         script: |
+          echo "Starting automated deployment..."
+          
+          # Navigate to project directory
+          cd /var/www/MalricPharmaFrontend
+          
+          # Create backup of current deployment
+          sudo cp -r dist dist-backup-$(date +%Y%m%d-%H%M%S) 2>/dev/null || true
+          
+          # Pull latest changes
+          git fetch origin
+          git reset --hard origin/main
+          
+          # Fix permissions before build (important!)
+          echo "Fixing permissions for build process..."
+          if [ -d "dist" ]; then
+            sudo chown -R $(whoami):$(whoami) dist/
+            sudo chmod -R 755 dist/
+          fi
+          
+          # Setup Node.js environment - try multiple common paths
+          export PATH="/usr/local/bin:/usr/bin:/bin:$PATH"
+          
+          # Try to find node and npm
+          NODE_PATH=$(which node 2>/dev/null || find /usr -name "node" 2>/dev/null | head -1)
+          NPM_PATH=$(which npm 2>/dev/null || find /usr -name "npm" 2>/dev/null | head -1)
+          
+          # If using Node Version Manager (nvm)
+          if [ -f ~/.nvm/nvm.sh ]; then
+            echo "Loading NVM..."
             export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-            nvm use v22.14.0
-            cd /home/developer/MalricPharmaFrontend
-            whoami
-            which node
-            echo $PATH
-            git pull origin main
-            node -v
-            npm install
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+            nvm use node 2>/dev/null || nvm use default 2>/dev/null || true
+          fi
+          
+          # If using Node from snap
+          if [ -d /snap/node ]; then
+            export PATH="/snap/bin:$PATH"
+          fi
+          
+          # Verify node and npm are available
+          echo "Node.js version: $(node --version 2>/dev/null || echo 'Node.js not found')"
+          echo "NPM version: $(npm --version 2>/dev/null || echo 'NPM not found')"
+          
+          # Install/update dependencies
+          if command -v npm >/dev/null 2>&1; then
+            npm ci
+          else
+            echo "❌ NPM not found. Trying alternative methods..."
+            # Try with full path if found
+            if [ -n "$NPM_PATH" ]; then
+              echo "Using NPM from: $NPM_PATH"
+              $NPM_PATH ci
+            else
+              echo "❌ Cannot find NPM. Please ensure Node.js is properly installed."
+              exit 1
+            fi
+          fi
+          
+          # Build the application
+          echo "Building application..."
+          # Ensure clean build environment
+          if [ -d "dist" ]; then
+            rm -rf dist
+          fi
+          
+          if command -v npm >/dev/null 2>&1; then
             npm run build
-            sudo cp -r dist/* /var/www/malricpharma.co.ke/
+          else
+            if [ -n "$NPM_PATH" ]; then
+              $NPM_PATH run build
+            else
+              echo "❌ Cannot build application - NPM not available"
+              exit 1
+            fi
+          fi
+          
+          # Clean up dev dependencies after build (optional - saves space)
+          echo "Cleaning up dev dependencies..."
+          if command -v npm >/dev/null 2>&1; then
+            npm prune --omit=dev
+          else
+            if [ -n "$NPM_PATH" ]; then
+              $NPM_PATH prune --omit=dev
+            fi
+          fi
+          
+          # Set proper permissions
+          sudo chown -R www-data:www-data dist/
+          sudo chmod -R 755 dist/
+          
+          # Test nginx configuration
+          sudo nginx -t
+          
+          # Reload nginx if config is valid
+          if [ $? -eq 0 ]; then
+            sudo systemctl reload nginx
+            echo "✅ Deployment completed successfully!"
+            echo "🌐 Site updated at: $(date)"
+          else
+            echo "❌ Nginx configuration error! Rolling back..."
+            # Restore backup if available
+            if [ -d "dist-backup-$(date +%Y%m%d)-"* ]; then
+              sudo rm -rf dist
+              sudo mv dist-backup-$(date +%Y%m%d)-* dist
+              sudo systemctl reload nginx
+            fi
+            exit 1
+          fi
+          
+          # Clean up old backups (keep last 5)
+          sudo find . -name "dist-backup-*" -type d | sort -r | tail -n +6 | xargs sudo rm -rf 2>/dev/null || true
+          
+          echo "🚀 Deployment automation completed!"
