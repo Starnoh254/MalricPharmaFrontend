@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
 import { useCart } from "../context/CartContext";
-import { useAuth } from "../context/AuthContext";
+// import { useAuth } from "../context/AuthContext";
 import { orderService } from "../api/orders";
 import type { ShippingInfo, PaymentInfo } from "../api/orders";
 import { calculateOrderTotal, getDeliveryFee } from "../utils/pricing";
@@ -17,7 +17,7 @@ type CheckoutStep = "shipping" | "payment" | "confirmation";
 export default function CheckoutPage() {
   const navigate = useNavigate();
   const { cartItems, total, clearCart } = useCart();
-  const { user, isAuthenticated } = useAuth();
+  // const { user, isAuthenticated } = useAuth();
 
   // Delivery fee calculation (frontend only - not sent to backend)
   const deliveryFee = getDeliveryFee(total);
@@ -25,12 +25,12 @@ export default function CheckoutPage() {
 
   const [currentStep, setCurrentStep] = useState<CheckoutStep>("shipping");
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo>({
-    fullName: user?.name || "",
+    fullName: "",
     address: "",
     city: "",
     postalCode: "",
     phone: "",
-    email: user?.email || "",
+    email: "",
     notes: "",
   });
   const [paymentInfo, setPaymentInfo] = useState<PaymentInfo>({
@@ -47,10 +47,10 @@ export default function CheckoutPage() {
   }
 
   // Redirect if not authenticated
-  if (!isAuthenticated) {
-    navigate("/login");
-    return null;
-  }
+  // if (!isAuthenticated) {
+  //   navigate("/login");
+  //   return null;
+  // }
 
   const handleShippingSubmit = (shipping: ShippingInfo) => {
     setShippingInfo(shipping);
