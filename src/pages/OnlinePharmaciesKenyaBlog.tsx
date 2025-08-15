@@ -8,15 +8,14 @@ import {
   Clock,
   Star,
 } from "lucide-react";
+import { useBrand } from "../hooks/useBrand";
 
 export default function OnlinePharmaciesKenyaBlog() {
+  const { brand } = useBrand();
   return (
     <>
       <SEOHelmet
-        title="Best Online Pharmacies in Kenya 2025 - Complete Guide | Malric Pharma"
-        description="Discover the top online pharmacies in Kenya. Compare services, prices, and delivery options. Learn how to safely buy medicines online from licensed pharmacies."
-        keywords="online pharmacies Kenya, best online pharmacy Kenya, buy medicines online Kenya, licensed pharmacy Kenya, online chemist Kenya"
-        url="https://malricpharma.co.ke/blog/online-pharmacies-kenya"
+        url={`${brand.seo.siteUrl}/blog/online-pharmacies-kenya`}
         schema={{
           "@context": "https://schema.org",
           "@type": "Article",
@@ -25,14 +24,14 @@ export default function OnlinePharmaciesKenyaBlog() {
             "Comprehensive guide to online pharmacies in Kenya, including safety tips, comparisons, and how to choose the right pharmacy for your needs.",
           author: {
             "@type": "Organization",
-            name: "Malric Pharma",
+            name: brand.name,
           },
           publisher: {
             "@type": "Organization",
-            name: "Malric Pharma",
+            name: brand.name,
             logo: {
               "@type": "ImageObject",
-              url: "https://malricpharma.co.ke/logo.png",
+              url: `${brand.seo.siteUrl}/logo.png`,
             },
           },
           datePublished: "2025-01-15",
@@ -111,7 +110,7 @@ export default function OnlinePharmaciesKenyaBlog() {
                 <div className="flex items-center mb-4">
                   <Star className="text-yellow-500 w-6 h-6 mr-2" />
                   <h3 className="text-2xl font-bold text-gray-800">
-                    1. Malric Pharma
+                    1. {brand.name}
                   </h3>
                 </div>
                 <p className="text-gray-600 mb-4">
@@ -138,10 +137,10 @@ export default function OnlinePharmaciesKenyaBlog() {
                   </div>
                 </div>
                 <a
-                  href="https://malricpharma.co.ke"
+                  href={brand.seo.siteUrl}
                   className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                 >
-                  Visit Malric Pharma
+                  Visit {brand.name}
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </a>
               </div>

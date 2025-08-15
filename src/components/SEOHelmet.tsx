@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { useBrand } from "../hooks/useBrand";
 
 interface SEOHelmetProps {
   title?: string;
@@ -10,15 +11,17 @@ interface SEOHelmetProps {
   schema?: object;
 }
 
-export default function SEOHelmet({
-  title = "Malric Pharma - Kenya's Leading Online Pharmacy | Quality Medicines Delivered",
-  description = "Buy prescription medicines, over-the-counter drugs & health products online in Kenya. Free same-day delivery in Nairobi. Licensed pharmacy with 24/7 support.",
-  keywords = "pharmacy Kenya, online pharmacy Nairobi, buy medicines online, prescription drugs Kenya, medical supplies, health products",
-  image = "https://malricpharma.co.ke/og-image.jpg",
-  url = "https://malricpharma.co.ke",
-  type = "website",
-  schema,
-}: SEOHelmetProps) {
+export default function SEOHelmet(props: SEOHelmetProps) {
+  const { brand } = useBrand();
+  const {
+    title = brand.seo.defaultTitle,
+    description = brand.seo.description,
+    keywords = brand.seo.keywords,
+    image = brand.seo.ogImage || `${brand.seo.siteUrl}/og-image.jpg`,
+    url = brand.seo.siteUrl,
+    type = "website",
+    schema,
+  } = props;
   return (
     <Helmet>
       {/* Primary Meta Tags */}
@@ -44,7 +47,7 @@ export default function SEOHelmet({
       {/* Additional SEO Meta Tags */}
       <meta name="robots" content="index, follow" />
       <meta name="language" content="English" />
-      <meta name="author" content="Malric Pharma" />
+      <meta name="author" content={brand.seo.author || brand.name} />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
       {/* Canonical URL */}

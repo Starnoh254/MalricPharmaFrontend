@@ -4,13 +4,14 @@ import { Menu, X, ShoppingCart, User, LogOut } from "lucide-react"; // icons for
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import navLinks from "../utils/navLinks";
-import logo from "../assets/malric.png";
+import { useBrand } from "../hooks/useBrand";
 
 export default function Navbar() {
   // State to toggle the mobile menu
   const [isOpen, setIsOpen] = useState(false);
   const { itemCount } = useCart();
   const { isAuthenticated, user, logout } = useAuth();
+  const { brand } = useBrand();
 
   return (
     // Main nav container
@@ -21,7 +22,7 @@ export default function Navbar() {
     <nav className="bg-background text-secondary w-full px-6 py-4 sticky top-0 z-50 shadow-md">
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         <Link to="/">
-          <img src={logo} alt="" className="w-32 " />
+          <img src={brand.logo} alt={brand.name} className="w-32 " />
         </Link>
 
         {/* Desktop nav */}

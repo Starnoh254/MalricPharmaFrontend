@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Package, Star, Grid, List } from "lucide-react";
 import MainLayout from "../components/MainLayout";
 import SEOHelmet from "../components/SEOHelmet";
+import { useBrand } from "../hooks/useBrand";
 import ProductCard from "../components/ProductCard";
 import SearchBar from "../components/SearchBar";
 import { api } from "../utils/axios";
@@ -28,6 +29,7 @@ interface Product {
 }
 
 const CategoryPage: React.FC = () => {
+  const { brand } = useBrand();
   const { categoryName } = useParams<{ categoryName: string }>();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
@@ -282,12 +284,12 @@ const CategoryPage: React.FC = () => {
   return (
     <>
       <SEOHelmet
-        title={`${currentCategory.title} - Buy Online | Malric Pharma Kenya`}
+        title={`${currentCategory.title} - Buy Online | ${brand.name} Kenya`}
         description={`${
           currentCategory.description
         }. Quality ${currentCategory.title.toLowerCase()} with fast delivery in Kenya. Licensed online pharmacy.`}
         keywords={`${currentCategory.title.toLowerCase()} Kenya, buy ${currentCategory.title.toLowerCase()} online, pharmacy Kenya`}
-        url={`https://malricpharma.co.ke/category/${categoryName}`}
+        url={`${brand.seo.siteUrl}/category/${categoryName}`}
       />
 
       <MainLayout>

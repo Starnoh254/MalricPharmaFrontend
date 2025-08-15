@@ -1,9 +1,11 @@
 // FAQ data for SEO and featured snippets
+import { BRANDS, detectBrandByLocation } from "../config/brands";
+const currentBrand = BRANDS[detectBrandByLocation()];
+
 export const pharmacyFAQs = [
   {
     question: "Is it safe to buy medicines online in Kenya?",
-    answer:
-      "Yes, it's completely safe when you buy from licensed pharmacies like Malric Pharma. We are regulated by the Kenya Pharmacy & Poisons Board and follow strict quality standards for all our medications.",
+    answer: `Yes, it's completely safe when you buy from licensed pharmacies like ${currentBrand.name}. We are regulated by the Kenya Pharmacy & Poisons Board and follow strict quality standards for all our medications.`,
     category: "Safety & Trust",
   },
   {

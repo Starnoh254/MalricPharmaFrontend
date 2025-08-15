@@ -16,8 +16,10 @@ import Testimonials from "../components/Testimonials";
 import AnimatedCounter from "../components/AnimatedCounter";
 import SEOHelmet from "../components/SEOHelmet";
 import { useInView } from "../hooks/useCountUp";
+import { useBrand } from "../hooks/useBrand";
 
 function About() {
+  const { brand } = useBrand();
   // Hook to detect when stats section comes into view
   const { ref: statsRef, isInView: statsInView } = useInView(0.3);
 
@@ -82,19 +84,16 @@ function About() {
   return (
     <>
       <SEOHelmet
-        title="About Malric Pharma - Kenya's Trusted Online Pharmacy | Licensed & Certified"
-        description="Learn about Malric Pharma, Kenya's leading online pharmacy. Licensed by Kenya Pharmacy Board, serving 50,000+ customers with quality medicines and free delivery."
-        keywords="about Malric Pharma, licensed pharmacy Kenya, online pharmacy Kenya, trusted pharmacy Nairobi, Kenya Pharmacy Board"
-        url="https://malricpharma.co.ke/about"
+        url={`${brand.seo.siteUrl}/about`}
         schema={{
           "@context": "https://schema.org",
           "@type": "AboutPage",
-          name: "About Malric Pharma",
+          name: `About ${brand.name}`,
           description: "Learn about Kenya's leading online pharmacy",
-          url: "https://malricpharma.co.ke/about",
+          url: `${brand.seo.siteUrl}/about`,
           mainEntity: {
             "@type": "Pharmacy",
-            name: "Malric Pharma",
+            name: brand.name,
             foundingDate: "2020",
             description:
               "Kenya's trusted online pharmacy serving over 50,000 customers",
@@ -110,7 +109,7 @@ function About() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold text-secondary mb-4">
-                Why Choose Malric Pharma?
+                Why Choose {brand.name}?
               </h2>
               <p className="text-lg text-grayText max-w-2xl mx-auto">
                 We're committed to providing the highest quality pharmaceutical

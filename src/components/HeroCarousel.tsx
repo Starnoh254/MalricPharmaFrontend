@@ -1,5 +1,6 @@
 // src/components/HeroCarousel.tsx
 import React, { useState, useEffect } from "react";
+import { useBrand } from "../hooks/useBrand";
 import {
   ChevronLeft,
   ChevronRight,
@@ -24,6 +25,7 @@ interface HeroCarouselProps {
 }
 
 const HeroCarousel: React.FC<HeroCarouselProps> = ({ className = "" }) => {
+  const { brand } = useBrand();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -69,8 +71,7 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({ className = "" }) => {
       id: 4,
       title: "🎯 New Customer Special",
       subtitle: "20% OFF Your First Order",
-      description:
-        "Welcome to Malric Pharma! Start your healthcare journey with exclusive savings.",
+      description: `Welcome to ${brand.name}! Start your healthcare journey with exclusive savings.`,
       ctaText: "Get Discount",
       imageUrl:
         "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?w=1200&h=600&fit=crop&crop=center",
@@ -90,7 +91,9 @@ const HeroCarousel: React.FC<HeroCarouselProps> = ({ className = "" }) => {
   };
 
   const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+    if (!touchStart || !touchEnd) {
+      return;
+    }
 
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > 50;

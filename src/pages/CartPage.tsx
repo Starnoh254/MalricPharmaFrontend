@@ -13,6 +13,7 @@ import SEOHelmet from "../components/SEOHelmet";
 import { useCart } from "../context/CartContext";
 import CartItem from "../components/CartItem";
 import { formatCurrency } from "../utils/currency";
+import { useBrand } from "../hooks/useBrand";
 import {
   getDeliveryFee,
   calculateOrderTotal,
@@ -20,6 +21,7 @@ import {
 } from "../utils/pricing";
 
 export default function CartPage() {
+  const { brand } = useBrand();
   const navigate = useNavigate();
   const { cartItems, total, clearCart, itemCount } = useCart();
 
@@ -150,10 +152,10 @@ export default function CartPage() {
   return (
     <>
       <SEOHelmet
-        title="Shopping Cart - Malric Pharma | Review Your Medicine Orders"
+        title={`Shopping Cart - ${brand.name} | Review Your Medicine Orders`}
         description="Review your selected medicines and health products. Secure checkout with free delivery on orders over KES 2,000 in Nairobi."
         keywords="shopping cart, medicine orders, secure checkout, pharmacy cart Kenya"
-        url="https://malricpharma.co.ke/cart"
+        url={`${brand.seo.siteUrl}/cart`}
       />
       <MainLayout>
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 py-4 md:py-8">

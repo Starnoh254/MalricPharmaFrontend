@@ -2,8 +2,10 @@ import { Link } from "react-router-dom";
 import MainLayout from "../components/MainLayout";
 import SEOHelmet from "../components/SEOHelmet";
 import { Calendar, ArrowRight, User } from "lucide-react";
+import { useBrand } from "../hooks/useBrand";
 
 export default function BlogPage() {
+  const { brand } = useBrand();
   const blogPosts = [
     {
       title: "Best Online Pharmacies in Kenya 2025 - Complete Guide",
@@ -11,7 +13,7 @@ export default function BlogPage() {
         "Discover the top online pharmacies in Kenya. Compare services, prices, and delivery options. Learn how to safely buy medicines online from licensed pharmacies.",
       slug: "online-pharmacies-kenya",
       date: "January 15, 2025",
-      author: "Malric Pharma Team",
+      author: `${brand.name} Team`,
       category: "Pharmacy Guide",
       readTime: "8 min read",
       image: "/hero-banner.png",
@@ -22,23 +24,20 @@ export default function BlogPage() {
   return (
     <>
       <SEOHelmet
-        title="Health & Pharmacy Blog - Malric Pharma Kenya | Medicine Tips & Guides"
-        description="Expert health advice, medicine guides, and pharmacy tips from Kenya's leading online pharmacy. Stay informed about health topics and medicine safety."
-        keywords="health blog Kenya, pharmacy tips, medicine guides, health advice Kenya, online pharmacy blog"
-        url="https://malricpharma.co.ke/blog"
+        url={`${brand.seo.siteUrl}/blog`}
         schema={{
           "@context": "https://schema.org",
           "@type": "Blog",
-          name: "Malric Pharma Health Blog",
+          name: `${brand.name} Health Blog`,
           description:
             "Health and pharmacy insights from Kenya's leading online pharmacy",
-          url: "https://malricpharma.co.ke/blog",
+          url: `${brand.seo.siteUrl}/blog`,
           publisher: {
             "@type": "Organization",
-            name: "Malric Pharma",
+            name: brand.name,
             logo: {
               "@type": "ImageObject",
-              url: "https://malricpharma.co.ke/logo.png",
+              url: `${brand.seo.siteUrl}/logo.png`,
             },
           },
         }}

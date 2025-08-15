@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { api } from "../utils/axios";
 import { Star, Users, Zap } from "lucide-react";
 import { useProductFilter } from "../utils/productFilters";
+import { useBrand } from "../hooks/useBrand";
 
 interface Product {
   id: string;
@@ -35,6 +36,7 @@ interface Product {
 }
 
 function Products() {
+  const { brand } = useBrand();
   const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
@@ -304,17 +306,13 @@ function Products() {
   return (
     <>
       <SEOHelmet
-        title="Online Pharmacies Kenya - Malric Pharma | Buy Medicines Online"
-        description="Leading online pharmacy in Kenya. Buy prescription drugs, over-the-counter medicines & health products online. Licensed pharmacy with free same-day delivery in Nairobi."
-        keywords="online pharmacies Kenya, online pharmacy Kenya, buy medicines online Kenya, prescription drugs Kenya, pharmacy Kenya, medical supplies Kenya, online chemist Kenya"
-        url="https://malricpharma.co.ke/products"
+        url={`${brand.seo.siteUrl}/products`}
         schema={{
           "@context": "https://schema.org",
           "@type": "Pharmacy",
-          name: "Malric Pharma",
-          description:
-            "Kenya's leading online pharmacy offering quality medicines and health products",
-          url: "https://malricpharma.co.ke",
+          name: brand.name,
+          description: brand.seo.description,
+          url: brand.seo.siteUrl,
           address: {
             "@type": "PostalAddress",
             streetAddress: "123 Kimathi Street",
@@ -355,7 +353,7 @@ function Products() {
                 Online Pharmacies Kenya - Licensed & Trusted
               </h1>
               <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-                Malric Pharma is among the leading online pharmacies in Kenya,
+                {brand.name} is among the leading online pharmacies in Kenya,
                 offering quality medicines, prescription drugs, and health
                 products with free same-day delivery in Nairobi.
               </p>

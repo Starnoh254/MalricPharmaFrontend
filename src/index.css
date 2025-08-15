@@ -2,6 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Brand CSS Variables (default to Malric Pharma) */
+:root {
+  /* Colors as RGB for alpha support */
+  --color-primary: 34 158 72; /* #229e48 */
+  --color-secondary: 15 47 72; /* #0f2f48 */
+  --color-accent: 250 204 21; /* #FACC15 */
+  --color-background: 255 255 255; /* #FFFFFF */
+  --color-grayText: 107 114 128; /* #6B7280 */
+
+  /* Fonts */
+  --font-heading: "Poppins";
+  --font-body: "Inter";
+}
+
+/* Brand: Malric Pharma (default) */
+.brand-malric {
+  --color-primary: 34 158 72; /* #229e48 */
+  --color-secondary: 15 47 72; /* #0f2f48 */
+  --color-accent: 250 204 21; /* #FACC15 */
+  --color-background: 255 255 255; /* #FFFFFF */
+  --color-grayText: 107 114 128; /* #6B7280 */
+  --font-heading: "Poppins";
+  --font-body: "Inter";
+}
+
+/* Brand: Angelic Star Pharmacy */
+.brand-angelic {
+  --color-primary: 99 102 241; /* #6366F1 indigo-500 */
+  --color-secondary: 17 24 39; /* #111827 slate-900 */
+  --color-accent: 236 72 153; /* #EC4899 pink-500 */
+  --color-background: 255 255 255; /* #FFFFFF */
+  --color-grayText: 75 85 99; /* #4B5563 gray-600 */
+  --font-heading: "Poppins";
+  --font-body: "Inter";
+}
+
 /* Custom animations */
 @keyframes slide-in {
   from {

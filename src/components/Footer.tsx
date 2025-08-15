@@ -10,8 +10,10 @@ import {
   Linkedin,
 } from "lucide-react";
 import navLinks from "../utils/navLinks";
+import { useBrand } from "../hooks/useBrand";
 
 export default function Footer() {
+  const { brand } = useBrand();
   return (
     <footer className="bg-secondary text-white mt-12">
       <div className="max-w-7xl mx-auto px-6 py-12">
@@ -19,7 +21,7 @@ export default function Footer() {
           {/* Company Info */}
           <div className="space-y-4">
             <h3 className="text-xl font-bold text-primary mb-4">
-              Malric Pharma
+              {brand.name}
             </h3>
             <p className="text-gray-300 text-sm leading-relaxed">
               Your trusted pharmacy providing quality healthcare products and
@@ -45,11 +47,19 @@ export default function Footer() {
                 <span>+254 708 733 882</span>
               </a>
               <a
-                href="mailto:info@malricpharma.co.ke"
+                href={`mailto:${
+                  brand.seo.author?.toLowerCase()?.includes("angelic")
+                    ? "info@angelicstar.co.ke"
+                    : "info@malricpharma.co.ke"
+                }`}
                 className="flex items-center gap-2 text-sm text-gray-300 hover:text-primary transition-colors"
               >
                 <Mail className="w-4 h-4 text-primary flex-shrink-0" />
-                <span>info@malricpharma.co.ke</span>
+                <span>
+                  {brand.seo.author?.toLowerCase()?.includes("angelic")
+                    ? "info@angelicstar.co.ke"
+                    : "info@malricpharma.co.ke"}
+                </span>
               </a>
             </div>
           </div>
@@ -79,7 +89,7 @@ export default function Footer() {
             </h3>
             <div className="flex gap-3">
               <a
-                href="https://facebook.com/malricpharma"
+                href={brand.socials.facebook || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all"
@@ -88,7 +98,7 @@ export default function Footer() {
                 <Facebook className="w-5 h-5" />
               </a>
               <a
-                href="https://twitter.com/malricpharma"
+                href={brand.socials.twitter || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all"
@@ -97,7 +107,7 @@ export default function Footer() {
                 <Twitter className="w-5 h-5" />
               </a>
               <a
-                href="https://instagram.com/malricpharma"
+                href={brand.socials.instagram || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all"
@@ -106,7 +116,7 @@ export default function Footer() {
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="https://linkedin.com/company/malricpharma"
+                href={brand.socials.linkedin || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all"
@@ -121,7 +131,7 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-600 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-gray-300 text-center md:text-left mb-4 md:mb-0">
-            © {new Date().getFullYear()} Malric Pharma. All rights reserved.
+            © {new Date().getFullYear()} {brand.name}. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
             <Link
